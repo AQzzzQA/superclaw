@@ -100,5 +100,5 @@ class StrategyPerformanceMetrics(BaseModel):
     actual_cpa: float = Field(default=None, description="实际转化成本")
     actual_cpc: float = Field(default=None, description="实际点击成本")
     actual_roas: float = Field(default=None, description="实际ROI")
-    ctr: float = Field(default=None, description="点击率"
-    cvr: float = Field(default=None, description="转化率"
+    ctr: float = Field(default=None, description="点击率")
+    cvr: float = Field(default=None, description="转化率")
