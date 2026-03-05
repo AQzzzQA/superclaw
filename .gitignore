@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+
+# Node modules (for web/)
+ad-platform/web/node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Memory and state (keep tracking files)
+# memory/*.md
+# memory/*.json
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+*.tar.gz
+
+# ClawHub locks
+.clawhub/lock.json
+.skills_store_lock.json
