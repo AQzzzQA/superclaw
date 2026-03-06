@@ -41,7 +41,7 @@
     "auto": 6,
     "manual": 0
   },
-  "lastReport": "2026-03-07 06:15",
+  "lastReport": "2026-03-07 06:45",
   "totalScans": 2,
   "autoFixEnabled": true,
   "nextCheck": 1772958000,
@@ -115,6 +115,11 @@
       "date": "2026-03-07 06:15",
       "result": "✅ 正常",
       "notes": "6 个未跟踪文件，3 个数据库进程，记忆文件 148K"
+    },
+    "morning_check_2_2026_03_07": {
+      "date": "2026-03-07 06:45",
+      "result": "✅ 正常",
+      "notes": "6 个未跟踪文件，磁盘使用率 41%，系统稳定"
     }
   },
   "currentRound": {
