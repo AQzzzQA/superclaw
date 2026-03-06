@@ -28,7 +28,8 @@
     "afternoon_check_7": 1772783500,
     "evening_check": 1772793900,
     "night_check": 1772826300,
-    "morning_check_2026_03_07": 1772872500
+    "morning_check_2026_03_07": 1772872500,
+    "quick_check_2026_03_07": 1772876100
   },
   "issuesFound": {
     "high": 2,
@@ -40,7 +41,7 @@
     "auto": 6,
     "manual": 0
   },
-  "lastReport": "2026-03-07 04:15",
+  "lastReport": "2026-03-07 05:15",
   "totalScans": 1,
   "autoFixEnabled": true,
   "nextCheck": 1772784000,
@@ -184,6 +185,11 @@
       "date": "2026-03-07 04:15",
       "result": "✅ 正常",
       "notes": "系统稳定，2 个新 TODO 标记（Chat.tsx），服务正常运行"
+    },
+    "quick_check_2026_03_07": {
+      "date": "2026-03-07 05:15",
+      "result": "✅ 正常",
+      "notes": "工作区 6 个未跟踪，系统稳定，20 个记忆文件，准备完整检查周期"
     }
   },
   "currentRound": {
