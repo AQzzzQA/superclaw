@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LemClaw - OpenClaw AI 助手</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 800px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .auth-screen {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .auth-screen input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+
+        .auth-screen input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .chat-screen {
+            display: none;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 15px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.ai {
+            background: white;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            border-bottom-left-radius: 5px;
+        }
+
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .input-area input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .input-area .btn {
+            padding: 12px 30px;
+            border-radius: 25px;
+        }
+
+        .error {
+            color: #e74c3c;
+            margin-top: 15px;
+            padding: 10px;
+            background: #fee;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .visible {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <img src="https://alegi.oss-accelerate.aliyuncs.com/ai/2026-03-06/lemclaw.png" alt="LemClaw" class="logo-img">
+                LemClaw AI 助手
+            </h1>
+            <p>智能对话，无限可能</p>
+        </div>
+
+        <!-- 授权码验证界面 -->
+        <div id="authScreen" class="auth-screen">
+            <h2 style="margin-bottom: 30px;">请输入授权码</h2>
+            <input
+                type="text"
+                id="authCode"
+                placeholder="输入您的授权码"
+                autocomplete="off"
+            >
+            <button class="btn" onclick="verifyAuth()" id="verifyBtn">验证授权码</button>
+            <div id="authError" class="error"></div>
+            <div id="authLoading" class="loading">正在验证</div>
+        </div>
+
+        <!-- 聊天界面 -->
+        <div id="chatScreen" class="chat-screen hidden">
+            <div id="messages" class="messages">
+                <div class="message ai">
+                    你好！我是 LemClaw AI 助手，很高兴为您服务。请问有什么可以帮助您的吗？🦞
+                </div>
+            </div>
+            <div class="input-area">
+                <input
+                    type="text"
+                    id="messageInput"
+                    placeholder="输入您的消息..."
+                    onkeypress="handleKeyPress(event)"
+                >
+                <button class="btn" onclick="sendMessage()" id="sendBtn">发送</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentAuthCode = '';
+
+        // 验证授权码
+        async function verifyAuth() {
+            const authCode = document.getElementById('authCode').value.trim();
+            const errorDiv = document.getElementById('authError');
+            const loadingDiv = document.getElementById('authLoading');
+            const verifyBtn = document.getElementById('verifyBtn');
+
+            if (!authCode) {
+                showError('请输入授权码');
+                return;
+            }
+
+            // 显示加载状态
+            loadingDiv.style.display = 'block';
+            errorDiv.style.display = 'none';
+            verifyBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/auth/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ auth_code: authCode })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    currentAuthCode = authCode;
+                    document.getElementById('authScreen').classList.add('hidden');
+                    document.getElementById('chatScreen').classList.remove('hidden');
+                    document.getElementById('chatScreen').classList.add('visible');
+                } else {
+                    showError(data.error || '授权码验证失败');
+                }
+            } catch (error) {
+                showError('网络错误，请稍后重试');
+            } finally {
+                loadingDiv.style.display = 'none';
+                verifyBtn.disabled = false;
+            }
+        }
+
+        // 发送消息
+        async function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            const sendBtn = document.getElementById('sendBtn');
+
+            if (!message) return;
+
+            // 禁用按钮
+            sendBtn.disabled = true;
+
+            // 添加用户消息
+            addMessage(message, 'user');
+            messageInput.value = '';
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        auth_code: currentAuthCode,
+                        message: message
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    addMessage(data.reply, 'ai');
+                } else {
+                    addMessage('抱歉，发生了错误：' + (data.error || '未知错误'), 'ai');
+                }
+            } catch (error) {
+                addMessage('网络错误，请稍后重试', 'ai');
+            } finally {
+                sendBtn.disabled = false;
+                messageInput.focus();
+            }
+        }
+
+        // 添加消息到聊天界面
+        function addMessage(text, type) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = text;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // 处理回车键
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // 显示错误
+        function showError(message) {
+            const errorDiv = document.getElementById('authError');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

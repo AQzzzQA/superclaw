@@ -1,0 +1,18 @@
+{
+  "name": "测试提醒",
+  "description": "1 分钟后发送测试提醒",
+  "schedule": {
+    "kind": "at",
+    "atMs": 1772768625000
+  },
+  "sessionTarget": "isolated",
+  "wakeMode": "now",
+  "deleteAfterRun": true,
+  "payload": {
+    "kind": "agentTurn",
+    "message": "你是一个暖心的提醒助手。请用温暖、有趣的方式提醒用户：测试提醒成功！要求：(1) 不要回复HEARTBEAT_OK (2) 不要解释你是谁 (3) 直接输出一条暖心的提醒消息 (4) 可以加一句简短的鸡汤或关怀的话 (5) 控制在2-3句话以内 (6) 用emoji点缀",
+    "deliver": true,
+    "channel": "qqbot",
+    "to": "C3A7C8A9D8B4C3C20DA94037CC13EBBB"
+  }
+}
