@@ -12,6 +12,7 @@ use tokio::sync::Mutex;
 mod gateway;
 mod skills;
 mod api;
+mod agents;
 
 // 导入 Gateway 类型
 use gateway::{ConnectionManager, LemClawProxy, OpenClawProxy};
@@ -53,6 +54,9 @@ impl AppConfig {
     }
 }
 
+// 导入 Orchestrator 状态管理
+use agents::mod::{OrchestratorState};
+
 // ========== 初始化函数 ==========
 
 fn init_logger() {
@@ -89,6 +93,9 @@ async fn main() -> Launch<rocket::Rocket<rocket::Ignite>> {
         config.openclaw_token.clone(),
     ));
 
+    // 初始化 Orchestrator
+    let orchestrator = Arc::new(Orchestrator::new(5));
+
     // 配置 CORS
     let cors = CorsOptions::default()
         .allowed_origins(
@@ -116,6 +123,7 @@ async fn main() -> Launch<rocket::Rocket<rocket::Ignite>> {
         .manage(connection_manager)
         .manage(lemlaw_proxy)
         .manage(openclaw_proxy)
+        .manage(orchestrator)
         .attach(cors)
         .mount(
             "/",
@@ -131,6 +139,12 @@ async fn main() -> Launch<rocket::Rocket<rocket::Ignite>> {
                 api::skills::fix_issues,
                 api::skills::generate_changelog,
                 api::skills::generate_license,
+                agents::list_agents,
+                agents::execute_parallel,
+                agents::execute_sequential,
+                agents::decompose_task,
+                agents::register_agent,
+                agents::get_agent_status,
             ],
         )
         .launch()
