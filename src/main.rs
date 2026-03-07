@@ -10,6 +10,8 @@ use tokio::sync::Mutex;
 
 // 导入模块
 mod gateway;
+mod skills;
+mod api;
 
 // 导入 Gateway 类型
 use gateway::{ConnectionManager, LemClawProxy, OpenClawProxy};
@@ -124,6 +126,11 @@ async fn main() -> Launch<rocket::Rocket<rocket::Ignite>> {
                 gateway::websocket::websocket_handler,
                 gateway::websocket::websocket_api_message,
                 gateway::websocket::list_connections,
+                api::skills::skills_health,
+                api::skills::scan_workspace,
+                api::skills::fix_issues,
+                api::skills::generate_changelog,
+                api::skills::generate_license,
             ],
         )
         .launch()
