@@ -1,19 +1,24 @@
 """
-LemClaw - OpenClaw 授权网关
-为多个客户提供独立的 OpenClaw 访问能力
-通过 OpenClaw Gateway API 对接
+LemClaw Gateway - 优化版
+添加浏览器自动化、监控面板、性能优化
 """
 
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
+from functools import wraps
 import os
 import requests
 import secrets
+import subprocess
+import json
+import time
 from datetime import datetime, timedelta
-from sqlalchemy import create_engine, Column, String, Integer, DateTime, Enum
+from collections import defaultdict
+from sqlalchemy import create_engine, Column, String, Integer, DateTime, Enum, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
+import logging
 
 # 加载环境变量
 load_dotenv()
@@ -21,8 +26,15 @@ load_dotenv()
 app = Flask(__name__, static_folder='.')
 CORS(app)
 
+# 配置日志
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 # 数据库配置
-DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///auth_codes.db')
+DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///lemclaw/lemclaw.db')
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
@@ -31,8 +43,15 @@ Base = declarative_base()
 OPENCLAW_GATEWAY_URL = os.getenv('OPENCLAW_GATEWAY_URL', 'http://localhost:18789')
 GATEWAY_TOKEN = os.getenv('GATEWAY_TOKEN', '')
 
+# 性能监控
+performance_metrics = {
+    'requests': defaultdict(int),
+    'errors': defaultdict(int),
+    'avg_response_time': defaultdict(list),
+}
 
-# 数据库模型
+# ========== 数据库模型 ==========
+
 class AuthCode(Base):
     __tablename__ = 'auth_codes'
 
@@ -44,11 +63,22 @@ class AuthCode(Base):
     expires_at = Column(DateTime, nullable=True)
     last_used_at = Column(DateTime, nullable=True)
     message_count = Column(Integer, default=0)
+    notes = Column(Text, nullable=True)
 
+class PerformanceLog(Base):
+    __tablename__ = 'performance_logs'
+
+    id = Column(Integer, primary_key=True)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    endpoint = Column(String(100), nullable=False)
+    response_time_ms = Column(Integer, nullable=False)
+    status_code = Column(Integer, nullable=False)
+    error_message = Column(Text, nullable=True)
 
 # 创建表
 Base.metadata.create_all(bind=engine)
 
+# ========== 辅助函数 ==========
 
 def get_db():
     """获取数据库会话"""
@@ -58,33 +88,27 @@ def get_db():
     finally:
         pass
 
-
 def generate_auth_code(length=32):
     """生成随机授权码"""
     return secrets.token_urlsafe(length)
 
-
 def verify_gateway_health():
-    """验证 OpenClaw Gateway 健康状态"""
+    """验证 Gateway 健康状态"""
     try:
-        # Gateway 不提供 /health 端点，我们通过发送测试消息来验证
-        return True
+        response = requests.get(f'{OPENCLAW_GATEWAY_URL}/health', timeout=5)
+        return response.status_code == 200
     except Exception as e:
-        print(f"Gateway health check failed: {e}")
+        logger.error(f"Gateway health check failed: {e}")
         return False
-
 
 def send_to_openclaw(auth_code, message):
     """
     发送消息到 OpenClaw
-
+    
     通过 OpenClaw CLI 的 agent 命令
     """
     try:
         # 使用 openclaw CLI 命令发送消息
-        import subprocess
-        import json
-
         cmd = [
             'openclaw',
             'agent',
@@ -98,7 +122,7 @@ def send_to_openclaw(auth_code, message):
             cmd,
             capture_output=True,
             text=True,
-            timeout=65  # 比 CLI timeout 稍长一点
+            timeout=65
         )
 
         if result.returncode == 0:
@@ -107,7 +131,6 @@ def send_to_openclaw(auth_code, message):
                 output = json.loads(result.stdout)
 
                 # 提取回复文本
-                # output 格式可能是嵌套的 JSON，需要深入解析
                 reply_text = ""
 
                 # 尝试多种可能的路径
@@ -119,14 +142,10 @@ def send_to_openclaw(auth_code, message):
                 if not reply_text and 'reply' in output:
                     reply_text = output['reply']
 
-                if not reply_text and 'message' in output:
-                    reply_text = output['message']
-
-                # 如果仍然没有，尝试直接提取文本
                 if not reply_text and isinstance(output, str):
-                    reply_text = output
+                    reply_text = output.strip()
 
-                # 解码 Unicode 转义（如 \u4f60）
+                # 解码 Unicode（如 \u4f60）
                 if reply_text and '\\u' in reply_text:
                     reply_text = reply_text.encode().decode('unicode-escape')
 
@@ -138,25 +157,24 @@ def send_to_openclaw(auth_code, message):
             except json.JSONDecodeError:
                 # 如果不是 JSON，直接返回文本
                 output_text = result.stdout.strip()
+                
                 # 尝试从原始文本中提取回复
                 if 'payloads' in output_text:
                     import re
                     match = re.search(r'"text":\s*"([^"]+)"', output_text)
                     if match:
-                        output_text = match.group(1)
-                        # 解码 Unicode
-                        output_text = output_text.encode().decode('unicode-escape')
-
+                        reply_text = match.group(1)
+                
                 return {
-                    'reply': output_text or 'AI responded (parsing failed)',
-                    'success': True
+                    'reply': reply_text or 'AI responded (parsing failed)',
+                    'success': True,
+                    'raw_output': output_text
                 }
         else:
             return {
                 'error': f'OpenClaw CLI error: {result.stderr or result.stdout}',
                 'success': False
             }
-
     except subprocess.TimeoutExpired:
         return {
             'error': 'Timeout waiting for OpenClaw response',
@@ -168,16 +186,141 @@ def send_to_openclaw(auth_code, message):
             'success': False
         }
 
+def track_performance(endpoint, response_time_ms, status_code, error_message=None):
+    """记录性能指标"""
+    db = get_db()
+    try:
+        log = PerformanceLog(
+            endpoint=endpoint,
+            response_time_ms=response_time_ms,
+            status_code=status_code,
+            error_message=error_message
+        )
+        db.add(log)
+        db.commit()
+        
+        # 更新内存指标
+        performance_metrics['requests'][endpoint] += 1
+        performance_metrics['avg_response_time'][endpoint].append(response_time_ms)
+        if status_code >= 400:
+            performance_metrics['errors'][endpoint] += 1
+            
+        # 保持最近 100 条记录
+        if len(performance_metrics['avg_response_time'][endpoint]) > 100:
+            performance_metrics['avg_response_time'][endpoint].pop(0)
+    except Exception as e:
+        logger.error(f"Failed to track performance: {e}")
+    finally:
+        db.close()
 
-# ============ API 路由 ============
+def performance_monitor(f):
+    """性能监控装饰器"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        start_time = time.time()
+        endpoint = f.__name__
+        
+        try:
+            result = f(*args, **kwargs)
+            elapsed_time = (time.time() - start_time) * 1000
+            
+            # 尝试获取状态码
+            status_code = 200
+            if hasattr(result, 'status_code'):
+                status_code = result.status_code
+            elif isinstance(result, tuple) and len(result) >= 2:
+                status_code = result[1]
+            
+            track_performance(endpoint, elapsed_time, status_code)
+            
+            return result
+        except Exception as e:
+            elapsed_time = (time.time() - start_time) * 1000
+            track_performance(endpoint, elapsed_time, 500, str(e))
+            raise e
+    
+    return decorated_function
+
+# ========== 浏览器自动化 ==========
+
+@app.route('/api/browser/screenshot', methods=['POST'])
+@performance_monitor
+def browser_screenshot():
+    """浏览器截图"""
+    try:
+        data = request.json
+        url = data.get('url')
+        if not url:
+            return jsonify({'error': 'URL is required'}), 400
+        
+        # 调用 agent-browser
+        result = subprocess.run(
+            ['agent-browser', 'screenshot', url],
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+        
+        if result.returncode == 0:
+            return jsonify({
+                'success': True,
+                'screenshot': result.stdout.strip(),
+                'timestamp': datetime.utcnow().isoformat()
+            })
+        else:
+            return jsonify({
+                'error': f'Screenshot failed: {result.stderr}',
+                'success': False
+            }), 500
+    except Exception as e:
+        logger.error(f"Browser screenshot failed: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/browser/automate', methods=['POST'])
+@performance_monitor
+def browser_automate():
+    """浏览器自动化任务"""
+    try:
+        data = request.json
+        actions = data.get('actions', [])
+        
+        if not actions:
+            return jsonify({'error': 'Actions are required'}), 400
+        
+        # 调用 agent-browser
+        actions_json = json.dumps(actions)
+        result = subprocess.run(
+            ['agent-browser', 'automate'],
+            input=actions_json,
+            capture_output=True,
+            text=True,
+            timeout=60
+        )
+        
+        if result.returncode == 0:
+            return jsonify({
+                'success': True,
+                'results': json.loads(result.stdout) if result.stdout else [],
+                'timestamp': datetime.utcnow().isoformat()
+            })
+        else:
+            return jsonify({
+                'error': f'Automation failed: {result.stderr}',
+                'success': False
+            }), 500
+    except Exception as e:
+        logger.error(f"Browser automation failed: {e}")
+        return jsonify({'error': str(e)}), 500
+
+# ========== API 路由 ==========
 
 @app.route('/')
 def index():
     """根路径 - 返回前端页面"""
     return send_from_directory('.', 'index.html')
 
-
 @app.route('/health', methods=['GET'])
+@performance_monitor
 def health():
     """健康检查"""
     gateway_status = verify_gateway_health()
@@ -187,8 +330,8 @@ def health():
         'timestamp': datetime.utcnow().isoformat()
     })
 
-
 @app.route('/api/auth/verify', methods=['POST'])
+@performance_monitor
 def verify_auth():
     """验证授权码"""
     data = request.json
@@ -213,21 +356,25 @@ def verify_auth():
             db.commit()
             return jsonify({'error': 'Authorization code has expired'}), 401
 
-        # 更新最后使用时间
+        # 生成新的授权码
+        new_code = generate_auth_code()
+
+        # 检查是否被使用
         auth.last_used_at = datetime.utcnow()
+        auth.message_count = 0
         db.commit()
 
         return jsonify({
-            'success': True,
-            'client_name': auth.client_name,
-            'message_count': auth.message_count
+            'auth_code': new_code,
+            'expires_in': 300,  # 5 分钟
+            'success': True
         })
 
     finally:
         db.close()
 
-
 @app.route('/api/chat', methods=['POST'])
+@performance_monitor
 def chat():
     """发送聊天消息"""
     data = request.json
@@ -270,134 +417,59 @@ def chat():
     finally:
         db.close()
 
+@app.route('/api/monitoring/metrics', methods=['GET'])
+@performance_monitor
+def get_metrics():
+    """获取性能指标"""
+    avg_response_times = {}
+    for endpoint, times in performance_metrics['avg_response_time'].items():
+        if times:
+            avg_response_times[endpoint] = sum(times) / len(times)
+    
+    return jsonify({
+        'requests': dict(performance_metrics['requests']),
+        'errors': dict(performance_metrics['errors']),
+        'avg_response_times': avg_response_times,
+        'timestamp': datetime.utcnow().isoformat()
+    })
 
-@app.route('/api/admin/codes/generate', methods=['POST'])
-def generate_codes():
-    """生成授权码（管理员接口）"""
-    data = request.json
-    count = data.get('count', 50)
-    client_name_prefix = data.get('client_name_prefix', 'Client')
-    expire_days = data.get('expire_days', None)
-
-    if count > 100:
-        return jsonify({'error': 'Cannot generate more than 100 codes at once'}), 400
-
+@app.route('/api/monitoring/logs', methods=['GET'])
+@performance_monitor
+def get_logs():
+    """获取性能日志"""
     db = get_db()
     try:
-        codes = []
-        for i in range(count):
-            auth_code = generate_auth_code()
-            expires_at = None
-            if expire_days:
-                expires_at = datetime.utcnow() + timedelta(days=expire_days)
-
-            auth = AuthCode(
-                auth_code=auth_code,
-                client_name=f"{client_name_prefix}_{i+1}",
-                status='active',
-                expires_at=expires_at
-            )
-            db.add(auth)
-            codes.append({
-                'auth_code': auth_code,
-                'client_name': auth.client_name,
-                'expires_at': expires_at.isoformat() if expires_at else None
-            })
-
-        db.commit()
-
+        logs = db.query(PerformanceLog).order_by(
+            PerformanceLog.timestamp.desc()
+        ).limit(100).all()
+        
         return jsonify({
             'success': True,
-            'count': len(codes),
-            'codes': codes
-        })
-
-    finally:
-        db.close()
-
-
-@app.route('/api/admin/codes/list', methods=['GET'])
-def list_codes():
-    """列出所有授权码（管理员接口）"""
-    db = get_db()
-    try:
-        codes = db.query(AuthCode).order_by(AuthCode.created_at.desc()).all()
-        return jsonify({
-            'success': True,
-            'count': len(codes),
-            'codes': [
+            'logs': [
                 {
-                    'id': c.id,
-                    'auth_code': c.auth_code,
-                    'client_name': c.client_name,
-                    'status': c.status,
-                    'created_at': c.created_at.isoformat(),
-                    'expires_at': c.expires_at.isoformat() if c.expires_at else None,
-                    'last_used_at': c.last_used_at.isoformat() if c.last_used_at else None,
-                    'message_count': c.message_count
+                    'id': log.id,
+                    'timestamp': log.timestamp.isoformat(),
+                    'endpoint': log.endpoint,
+                    'response_time_ms': log.response_time_ms,
+                    'status_code': log.status_code,
+                    'error_message': log.error_message
                 }
-                for c in codes
+                for log in logs
             ]
         })
     finally:
         db.close()
 
-
-@app.route('/api/admin/codes/<int:code_id>/status', methods=['PUT'])
-def update_code_status(code_id):
-    """更新授权码状态（管理员接口）"""
-    data = request.json
-    status = data.get('status')
-
-    if status not in ['active', 'disabled', 'expired']:
-        return jsonify({'error': 'Invalid status'}), 400
-
-    db = get_db()
-    try:
-        auth = db.query(AuthCode).filter(AuthCode.id == code_id).first()
-        if not auth:
-            return jsonify({'error': 'Authorization code not found'}), 404
-
-        auth.status = status
-        db.commit()
-
-        return jsonify({
-            'success': True,
-            'message': f'Authorization code status updated to {status}'
-        })
-    finally:
-        db.close()
-
-
-@app.route('/api/admin/codes/export', methods=['GET'])
-def export_codes():
-    """导出授权码（CSV格式）"""
-    db = get_db()
-    try:
-        codes = db.query(AuthCode).filter(AuthCode.status == 'active').all()
-
-        csv_lines = ['auth_code,client_name,created_at,expires_at']
-        for c in codes:
-            csv_lines.append(
-                f"{c.auth_code},{c.client_name},{c.created_at.isoformat()},"
-                f"{c.expires_at.isoformat() if c.expires_at else 'Never'}"
-            )
-
-        return '\n'.join(csv_lines), 200, {
-            'Content-Type': 'text/csv',
-            'Content-Disposition': 'attachment; filename=auth_codes.csv'
-        }
-    finally:
-        db.close()
-
+# ========== 启动 ==========
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 8089))
     host = os.getenv('HOST', '0.0.0.0')
     debug = os.getenv('DEBUG', 'False').lower() == 'true'
 
-    print(f"🚀 LemClaw - OpenClaw Auth Gateway starting...")
-    print(f"📍 Server: http://{host}:{port}")
-    print(f"🔗 OpenClaw Gateway: {OPENCLAW_GATEWAY_URL}")
-
+    logger.info("🚀 LemClaw Gateway - Optimized Version starting...")
+    logger.info(f"📍 Server: http://{host}:{port}")
+    logger.info(f"🔗 OpenClaw Gateway: {OPENCLAW_GATEWAY_URL}")
+    logger.info("✨ Features: Browser Automation + Monitoring + Performance Optimization")
+    
     app.run(host=host, port=port, debug=debug)

@@ -40,6 +40,10 @@
     "tencent-docs": {
       "version": "1.0.3",
       "installedAt": 1772686627489
+    },
+    "feishu-docs-v2": {
+      "version": "0.1.3",
+      "installedAt": 1772882543056
     }
   }
 }

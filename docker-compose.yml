@@ -1,0 +1,205 @@
+# SuperClaw Docker 配置
+# 支持 SuperClaw 和 LemClaw Gateway
+
+# ==========================================
+# 开发环境配置
+# ==========================================
+
+version: '3.8'
+
+services:
+  # SuperClaw 后端
+  superclaw:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - RUST_LOG=info
+      - OPENCLAW_GATEWAY_URL=http://openclaw_gateway:18789
+      - LEMLAW_GATEWAY_URL=http://lemclaw_gateway:8089
+      - DATABASE_URL=sqlite:///app/data/superclaw.db
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    depends_on:
+      - redis
+    networks:
+      - superclaw-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # 前端开发服务器
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src
+    networks:
+      - superclaw-network
+    command: npm run dev
+    restart: unless-stopped
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - superclaw-network
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # LemClaw Gateway
+  lemclaw_gateway:
+    build:
+      context: ./LemClaw
+      dockerfile: Dockerfile.lemclaw
+    ports:
+      - "8089:8089"
+    environment:
+      - FLASK_ENV=production
+      - DATABASE_URL=sqlite:///app/data/lemclaw.db
+      - REDIS_URL=redis://redis:6379/0
+      - OPENCLAW_GATEWAY_URL=http://openclaw_gateway:18789
+      - GATEWAY_TOKEN=${GATEWAY_TOKEN}
+    volumes:
+      - ./LemClaw/logs:/app/logs
+    depends_on:
+      - redis
+    networks:
+      - superclaw-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8089/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # PostgreSQL 数据库（可选，生产环境）
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=superclaw
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=superclaw
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - superclaw-network
+    restart: unless-stopped
+
+  # Nginx 反向代理（生产环境）
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - superclaw
+      - frontend
+      - lemclaw_gateway
+    networks:
+      - superclaw-network
+    restart: unless-stopped
+
+# ==========================================
+# 生产环境配置（取消注释以使用）
+# ==========================================
+
+  # SuperClaw 后端（生产）
+  superclaw-prod:
+    image: superclaw:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - RUST_LOG=warn
+      - OPENCLAW_GATEWAY_URL=https://api.openclaw.com
+      - LEMLAW_GATEWAY_URL=https://api.lemclaw.com
+      - DATABASE_URL=postgresql://superclaw:${DB_PASSWORD}@postgres:5432/superclaw
+      - REDIS_URL=redis://redis:6379/1
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - superclaw-network
+    restart: always
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+  # LemClaw Gateway（生产）
+  lemclaw_gateway-prod:
+    image: lemclaw-gateway:latest
+    ports:
+      - "8089:8089"
+    environment:
+      - FLASK_ENV=production
+      - DATABASE_URL=postgresql://lemclaw:${DB_PASSWORD}@postgres:5432/lemclaw
+      - REDIS_URL=redis://redis:6379/1
+      - OPENCLAW_GATEWAY_URL=https://api.openclaw.com
+      - GATEWAY_TOKEN=${GATEWAY_TOKEN}
+    volumes:
+      - ./LemClaw/logs:/app/logs
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - superclaw-network
+    restart: always
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
+# ==========================================
+# 网络配置
+# ==========================================
+
+networks:
+  superclaw-network:
+    driver: bridge
+
+# ==========================================
+# 数据卷
+# ==========================================
+
+volumes:
+  redis-data:
+    driver: local
+  postgres-data:
+    driver: local
+  logs:
+    driver: local

@@ -12,7 +12,7 @@
 # Node.js / 前端
 # ==========================================
 
-node_modules
+/node_modules
 /frontend/node_modules
 /frontend/dist
 /frontend/.vite
@@ -51,8 +51,8 @@ Thumbs.db
 # 日志和数据
 # ==========================================
 
-logs
-data
+/logs
+/data
 *.log
 *.db
 *.sqlite
@@ -70,19 +70,19 @@ data
 # Docker
 # ==========================================
 
-docker
+/docker
 *.pid
 
 # ==========================================
 # 测试覆盖率
 # ==========================================
 
-coverage
-tarpaulin.html
+/coverage
+.tarpaulin.html
 
 # ==========================================
 # 临时文件
 # ==========================================
 
-tmp
-temp
+tmp/
+temp/
