@@ -20,7 +20,7 @@
 
 ## 系统概述
 
-SuperClaw 是一个融合 OpenClaw 的易用性和 LemClaw 的安全性 + IronClaw 的 Echo Skills 特性的下一代智能体平台。
+SuperClaw 是一个融合 OpenClaw 的易用性、LemClaw 的安全性，以及 Echo 智能体自动化能力的下一代智能体平台。
 
 ### 核心特性
 

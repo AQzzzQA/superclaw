@@ -24,7 +24,7 @@ SuperClaw 是一个融合 OpenClaw 的易用性、LemClaw 的安全性，以及 
 - 🚀 **双网关兼容** - OpenClaw Gateway（WebSocket） + LemClaw Gateway（HTTP）
 - 🛡️ **企业级安全** - 4 层安全防护（网络、应用、数据、沙箱、审计）
 =======
-SuperClaw 是一个融合 OpenClaw 的易用性和 LemClaw 的安全性 + IronClaw 的 Echo Skills 特性的下一代智能体平台。
+SuperClaw 是一个融合 OpenClaw 的易用性、LemClaw 的安全性，以及 Echo 智能体自动化能力的下一代智能体平台。
 
 ### 核心特性
 
