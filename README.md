@@ -2,7 +2,7 @@
 
 > **Super Claw AI Platform** - 下一代智能体融合平台
 >
-> 双网关兼容 OpenClaw + LemClaw，更安全、更智能、更强大！
+> 双网关兼容 OpenClaw + LemClaw，融合 Echo 智能体的自动化能力！
 
 [![SuperClaw](https://img.shields.io/badge/Success)](https://img.shields.io/badge/v1.0.0-blue)
 [![Rust](https://img.shields.io/badge/Rust-1.70+-blue)
@@ -13,7 +13,7 @@
 
 ## 📋 项目简介
 
-SuperClaw 是一个融合 OpenClaw 的易用性和 LemClaw 的安全性 + IronClaw 的 Echo Skills 特性的下一代智能体平台。
+SuperClaw 是一个融合 OpenClaw 的易用性、LemClaw 的安全性，以及 Echo 智能体自动化能力的下一代智能体平台。
 
 ### 🌟 核心特性
 
