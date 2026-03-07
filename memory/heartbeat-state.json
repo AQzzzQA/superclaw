@@ -41,7 +41,7 @@
     "auto": 6,
     "manual": 0
   },
-  "lastReport": "2026-03-07 21:53",
+  "lastReport": "2026-03-07 22:23",
   "totalScans": 2,
   "autoFixEnabled": true,
   "nextCheck": 1772958000,
@@ -257,9 +257,9 @@
       "notes": "9 个未跟踪文件（新增 feishu-docs-v2），21 个记忆文件，系统运行 2 天 8 小时，负载 0.37"
     },
     "night_2_2026_03_07": {
-      "date": "2026-03-07 21:53",
+      "date": "2026-03-07 22:23",
       "result": "✅ 正常",
-      "notes": "9 个未跟踪文件（新增 feishu-docs-v2），21 个记忆文件，系统运行 2 天 8 小时，负载 0.37"
+      "notes": "9 个未跟踪文件（新增 feishu-docs-v2），21 个记忆文件，系统运行 2 天 9 小时，负载 0.07"
     }
   },
   "currentRound": {
