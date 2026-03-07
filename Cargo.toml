@@ -2,7 +2,7 @@
 name = "superclaw"
 version = "0.1.0"
 edition = "2021"
-authors = ["Echo-2"]
+authors = ["AQzzzQA"]
 description = "SuperClaw - 下一代智能体融合平台，双网关兼容 OpenClaw + LemClaw"
 license = "MIT"
 repository = "https://github.com/AQzzzQA/superclaw"

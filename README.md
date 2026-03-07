@@ -110,4 +110,4 @@ MIT License - 详见 [LICENSE](LICENSE)
 
 **创建时间**: 2026-03-08
 **版本**: v1.0.0
-**作者**: Echo-2 🚀
+**作者**: AQzzzQA 🚀
