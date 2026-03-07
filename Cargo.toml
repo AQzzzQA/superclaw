@@ -1,0 +1,57 @@
+[package]
+name = "superclaw"
+version = "0.1.0"
+edition = "2021"
+authors = ["AQzzzQA"]
+description = "SuperClaw - 下一代智能体融合平台，双网关兼容 OpenClaw + LemClaw"
+license = "MIT"
+repository = "https://github.com/AQzzzQA/superclaw"
+homepage = "https://github.com/AQzzzQA/superclaw"
+readme = "README.md"
+keywords = ["ai", "agent", "gateway", "openclaw", "lemclaw"]
+categories = ["web-programming", "api-bindings"]
+
+[dependencies]
+# Web 框架
+rocket = { version = "0.5.4", features = ["json"] }
+rocket_cors = "0.6.0"
+
+# 异步运行时
+tokio = { version = "1", features = ["full"] }
+tokio-tungstenite = "0.21.0"
+
+# 序列化
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# 数据库
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "sqlite"] }
+
+# HTTP 客户端
+reqwest = { version = "0.12", features = ["json"] }
+
+# 时间处理
+chrono = "0.4"
+
+# 日志
+log = "0.4"
+env_logger = "0.11"
+
+# 环境变量
+dotenv = "0.15"
+
+# WebSocket
+futures = "0.3"
+futures-util = "0.3"
+
+# 错误处理
+anyhow = "1.0"
+thiserror = "1.0"
+
+[dev-dependencies]
+tokio-test = "0.4"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1

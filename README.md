@@ -4,21 +4,33 @@
 >
 > 双网关兼容 OpenClaw + LemClaw，融合 Echo 智能体的自动化能力！
 
-[![SuperClaw](https://img.shields.io/badge/Success)](https://img.shields.io/badge/v1.0.0-blue)
+[![SuperClaw](https://img.shields.io/badge/v1.0.0-blue)](https://img.shields.io/badge/v1.0.0-blue)
 [![Rust](https://img.shields.io/badge/Rust-1.70+-blue)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![GitHub](https://img.shields.io/badge/github/AQzzzQA/superclaw-orange.svg)](https://github.com/AQzzzQA/superclaw)
+=======
+> 双网关兼容 OpenClaw + LemClaw，更安全、更智能、更强大！
+>>>>>>> origin/main
 
 ---
 
 ## 📋 项目简介
 
+<<<<<<< HEAD
 SuperClaw 是一个融合 OpenClaw 的易用性、LemClaw 的安全性，以及 Echo 智能体自动化能力的下一代智能体平台。
 
 ### 🌟 核心特性
 
 - 🚀 **双网关兼容** - OpenClaw Gateway（WebSocket） + LemClaw Gateway（HTTP）
 - 🛡️ **企业级安全** - 4 层安全防护（网络、应用、数据、沙箱、审计）
+=======
+SuperClaw 是一个融合 OpenClaw 的易用性和 LemClaw 的安全性 + IronClaw 的 Echo Skills 特性的下一代智能体平台。
+
+### 核心特性
+
+- 🚀 **双网关兼容** - OpenClaw Gateway（WebSocket） + LemClaw Gateway（HTTP）
+- 🛡️ **企业级安全** - WebAssembly 沙箱隔离、令牌白名单、多层防护
+>>>>>>> origin/main
 - 🤖 **智能体编排** - 并行/串行协作、任务分解、结果汇总
 - 🔌 **灵活插件** - WASM 插件、多模型支持
 - 📊 **自动化能力** - Echo Skills 自动修复、代码扫描、文档生成
@@ -27,6 +39,7 @@ SuperClaw 是一个融合 OpenClaw 的易用性、LemClaw 的安全性，以及 
 
 ## 🏗️ 技术栈
 
+<<<<<<< HEAD
 | 组件 | 技术选型 | 说明 |
 |------|---------|------|
 | **后端** | Rust + Rocket | 高性能 Web 框架 |
@@ -36,6 +49,16 @@ SuperClaw 是一个融合 OpenClaw 的易用性、LemClaw 的安全性，以及 
 | **前端** | Vue 3 + Vite + Naive UI | 响应式 SPA |
 | **容器化** | Docker + Docker Compose | 跨平台部署 |
 | **沙箱** | WebAssembly (WASM) | 插件安全隔离 |
+=======
+| 组件 | 技术选型 |
+|------|---------|
+| **后端** | Rust + Axum |
+| **网关** | WebSocket + HTTP |
+| **数据库** | SQLite + Redis |
+| **AI 集成** | OpenAI + Claude + GLM |
+| **前端** | Vue 3 + Naive UI |
+| **容器化** | Docker + WebAssembly |
+>>>>>>> origin/main
 
 ---
 
@@ -47,6 +70,7 @@ superclaw/
 ├── src/
 │   ├── main.rs         # 入口
 │   ├── gateway/        # 双网关
+<<<<<<< HEAD
 │   │   ├── websocket.rs   # WebSocket Gateway
 │   │   ├── http.rs       # HTTP Gateway
 │   │   ├── auth.rs        # 认证系统
@@ -75,6 +99,14 @@ superclaw/
 ├── .env.example        # 环境变量示例
 ├── .dockerignore       # Docker 忽略文件
 └── README.md           # 项目说明
+=======
+│   ├── agent/          # 智能体编排
+│   ├── skill/          # 技能系统
+│   └── security/       # 安全防护
+├── frontend/           # Vue 3 前端
+├── plugins/           # WASM 插件
+└── docs/              # 文档
+>>>>>>> origin/main
 ```
 
 ---
@@ -83,14 +115,21 @@ superclaw/
 
 ### 环境要求
 
+<<<<<<< HEAD
 - **Rust**: 1.70+
 - **Node.js**: 22.22.0+
 - **Python**: 3.11+（LemClaw Gateway）
 - **Git**: 最新版本
+=======
+- Rust 1.70+
+- Node.js 22.22.0+
+- Python 3.11+
+>>>>>>> origin/main
 
 ### 安装
 
 ```bash
+<<<<<<< HEAD
 # 1. 克隆仓库
 git clone https://github.com/AQzzzQA/superclaw.git
 cd superclaw
@@ -124,12 +163,30 @@ docker-compose up -d
 # 前端: http://localhost:5173
 # API: http://localhost:3000
 # 监控: http://localhost:8089/monitor.html
+=======
+# 克隆仓库
+git clone https://github.com/AQzzzQA/superclaw.git
+cd superclaw
+
+# 安装 Rust 依赖
+cargo build --release
+
+# 启动 LemClaw Gateway
+cd LemClaw
+pip install -r requirements.txt
+python3 app.py
+
+# 启动 SuperClaw
+cd superclaw
+cargo run --release
+>>>>>>> origin/main
 ```
 
 ---
 
 ## 📚 文档
 
+<<<<<<< HEAD
 | 文档 | 说明 | 链接 |
 |------|------|------|
 | **架构文档** | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | 系统架构、模块设计、数据流 |
@@ -364,6 +421,18 @@ curl http://localhost:3000/api/status
 - 通过 `cargo clippy` 检查
 - 添加文档注释
 - 编写测试用例
+=======
+- [架构文档](docs/ARCHITECTURE.md)
+- [API 文档](docs/API.md)
+- [开发指南](docs/DEVELOPER.md)
+- [安全文档](docs/SECURITY.md)
+
+---
+
+## 🤝 贡献
+
+欢迎提交 PR！请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)
+>>>>>>> origin/main
 
 ---
 
@@ -382,6 +451,7 @@ MIT License - 详见 [LICENSE](LICENSE)
 **创建时间**: 2026-03-08
 **版本**: v1.0.0
 **作者**: AQzzzQA 🚀
+<<<<<<< HEAD
 **状态**: 🟢 已发布 100%
 
 ---
@@ -389,3 +459,5 @@ MIT License - 详见 [LICENSE](LICENSE)
 # 🎉 SuperClaw - 让 AI 更强大、更安全、更智能！
 
 **🦞 超爪出击！** 🌟
+=======
+>>>>>>> origin/main
