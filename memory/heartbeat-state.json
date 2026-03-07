@@ -41,7 +41,7 @@
     "auto": 6,
     "manual": 0
   },
-  "lastReport": "2026-03-07 20:23",
+  "lastReport": "2026-03-07 20:53",
   "totalScans": 2,
   "autoFixEnabled": true,
   "nextCheck": 1772958000,
@@ -240,6 +240,11 @@
       "date": "2026-03-07 20:23",
       "result": "✅ 正常",
       "notes": "1 个修改文件（.clawhub/lock.json），9 个未跟踪文件，系统运行 2 天 7 小时"
+    },
+    "night_2_2026_03_07": {
+      "date": "2026-03-07 20:53",
+      "result": "✅ 正常",
+      "notes": "9 个未跟踪文件（新增 feishu-docs-v2），21 个记忆文件，系统稳定"
     }
   },
   "currentRound": {
