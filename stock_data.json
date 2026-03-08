@@ -1,0 +1,34 @@
+{
+  "002156": {
+    "name": "通富微电",
+    "quantity": 300,
+    "buy_price": 54.0,
+    "buy_date": "2026-03-08",
+    "current_price": null,
+    "update_time": null
+  },
+  "002837": {
+    "name": "英维克",
+    "quantity": 200,
+    "buy_price": 101.7,
+    "buy_date": "2026-03-08",
+    "current_price": null,
+    "update_time": null
+  },
+  "002895": {
+    "name": "世嘉科技",
+    "quantity": 200,
+    "buy_price": 41.95,
+    "buy_date": "2026-03-08",
+    "current_price": null,
+    "update_time": null
+  },
+  "300408": {
+    "name": "三环集团",
+    "quantity": 100,
+    "buy_price": 58.96,
+    "buy_date": "2026-03-08",
+    "current_price": null,
+    "update_time": null
+  }
+}

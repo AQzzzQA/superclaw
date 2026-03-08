@@ -1,0 +1,40 @@
+{
+  "name": "manus-expert",
+  "version": "1.0.0",
+  "description": "Manus API 专家智能体，专门用于调用 Manus API 处理复杂任务",
+  "author": "Echo-2",
+  "created": "2026-03-05",
+  "capabilities": [
+    "调用 Manus REST API",
+    "创建和管理 Manus 任务",
+    "上传文件到 Manus",
+    "利用 Manus Connectors（Gmail、Notion、Calendar）",
+    "解析 API 响应",
+    "错误处理和重试"
+  ],
+  "endpoints": {
+    "base_url": "https://api.manus.ai/v1",
+    "tasks": "/v1/tasks",
+    "files": "/v1/files",
+    "webhooks": "/v1/webhooks",
+    "get_task": "/v1/tasks/{task_id}"
+  },
+  "scenarios": [
+    "复杂代码分析",
+    "文件处理和总结",
+    "邮件处理",
+    "Notion 数据库更新",
+    "日程安排"
+  ],
+  "agent_profiles": {
+    "manus-1.6": "完整版（最强）",
+    "manus-1.6-lite": "轻量版（更快）",
+    "manus-1.6-max": "最大版（更强）"
+  },
+  "connectors": [
+    "gmail",
+    "notion",
+    "google-calendar",
+    "slack"
+  ]
+}

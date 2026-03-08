@@ -1,0 +1,23 @@
+# 广告平台
+ad-platform/
+ad-platform-backup-*.tar.gz
+
+# 其他不需要的文件
+*.log
+*.pyc
+__pycache__/
+.pytest_cache/
+node_modules/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 系统文件
+.DS_Store
+Thumbs.db
