@@ -32,6 +32,22 @@
     "weather": {
       "version": "1.0.0",
       "installedAt": 1771928432876
+    },
+    "contract-reviewer": {
+      "version": "1.0.0",
+      "installedAt": 1773037751601
+    },
+    "stock-monitor-skill": {
+      "version": "0.1.0",
+      "installedAt": 1773041626336
+    },
+    "meta-ads": {
+      "version": "1.0.0",
+      "installedAt": 1773041916511
+    },
+    "adspirer-ads-agent": {
+      "version": "1.5.0",
+      "installedAt": 1773065203623
     }
   }
 }

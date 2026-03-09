@@ -1,28 +1,31 @@
 {
   "lastChecks": {
-    "code_health": 1772680300,
-    "dependencies": 1772692300,
-    "docs": 1772686300,
-    "performance": 1772683300,
-    "security": 1772689300
+    "code_health": 1773069600,
+    "dependencies": 1773144600,
+    "docs": 1773157200,
+    "performance": 1773146400,
+    "security": 1773148200,
+    "quick_check_2026_03_10_7": 1773096848
   },
   "issuesFound": {
-    "high": 0,
-    "medium": 5,
-    "low": 7
+    "high": 2,
+    "medium": 11,
+    "low": 10,
+    "total": 23
   },
   "issuesFixed": {
-    "auto": 5,
+    "auto": 7,
     "manual": 0
   },
-  "lastReport": "2026-03-05 16:18",
-  "totalScans": 1,
+  "lastReport": "2026-03-10 06:54",
+  "totalScans": 43,
   "autoFixEnabled": true,
-  "nextCheck": 1772686400,
+  "nextCheck": 1773183845,
   "scanInterval": 86400,
   "lastTest": {
     "date": "2026-03-05 17:15",
     "status": "passed",
+    "fix_applied": true,
     "result": "✅ 测试通过"
   },
   "capabilities": {
@@ -32,5 +35,17 @@
     "qualityControl": true,
     "continuousLearning": true
   },
-  "enhancementLevel": "Stage 1 Complete"
+  "enhancementLevel": "Stage 1 Complete",
+  "recentScans": {
+    "quick_check_2026_03_10_7": {
+      "date": "2026-03-10 06:54",
+      "result": "⚠️ 20 个文件未提交",
+      "notes": "系统稳定(4天17小时), 负载0.07, 内存47%, 磁盘48%. TODO/FIXME: 0个. 未提交: MEMORY.md, TODO.md, heartbeat-state.json已修改, 20个新文件包括oceanengine-ads、contract-reviewer等新技能"
+    },
+    "quick_check_2026_03_10_6": {
+      "date": "2026-03-10 06:24",
+      "result": "⚠️ 7 个文件未提交",
+      "notes": "系统稳定(4天17小时), 负载0.06, 内存47%, 磁盘48%. 7个新文件未提交"
+    }
+  }
 }

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "skills": {
+    "contract-reviewer": {
+      "name": "Contract Reviewer",
+      "zip_url": "http://lightmake.site/api/v1/download?slug=contract-reviewer",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "stock-monitor-skill": {
+      "name": "Stock Monitor",
+      "zip_url": "http://lightmake.site/api/v1/download?slug=stock-monitor-skill",
+      "source": "skillhub",
+      "version": "0.1.0"
+    },
+    "meta-ads": {
+      "name": "Meta Ads",
+      "zip_url": "http://lightmake.site/api/v1/download?slug=meta-ads",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "adspirer-ads-agent": {
+      "name": "Adspirer Ads Agent",
+      "zip_url": "http://lightmake.site/api/v1/download?slug=adspirer-ads-agent",
+      "source": "skillhub",
+      "version": "1.5.0"
+    }
+  }
+}
