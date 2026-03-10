@@ -671,3 +671,23 @@ async def write_memory(
     """
     integration = get_memory_integration()
     return await integration.memory_write(path, content, sync_to_openviking)
+
+
+async def extract_and_store(
+    text: str,
+    session_key: str,
+    metadata: Optional[Dict[str, Any]] = None
+) -> bool:
+    """
+    全局记忆提取函数
+
+    Args:
+        text: 待提取的文本
+        session_key: 会话键
+        metadata: 元数据
+
+    Returns:
+        是否成功
+    """
+    integration = get_memory_integration()
+    return await integration.extract_and_store(text, session_key, metadata)

@@ -48,6 +48,26 @@
     "adspirer-ads-agent": {
       "version": "1.5.0",
       "installedAt": 1773065203623
+    },
+    "session-monitor": {
+      "version": "1.0.0",
+      "installedAt": 1773134699421
+    },
+    "code-security-auditor": {
+      "version": "1.3.0",
+      "installedAt": 1773134704153
+    },
+    "ai-security-scanner": {
+      "version": "1.0.0",
+      "installedAt": 1773134707238
+    },
+    "tdd-ecc": {
+      "version": "2.0.0",
+      "installedAt": 1773134715439
+    },
+    "test-effort-estimator": {
+      "version": "1.0.0",
+      "installedAt": 1773134720652
     }
   }
 }

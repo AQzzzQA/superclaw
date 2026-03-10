@@ -24,6 +24,36 @@
       "zip_url": "http://lightmake.site/api/v1/download?slug=adspirer-ads-agent",
       "source": "skillhub",
       "version": "1.5.0"
+    },
+    "session-monitor": {
+      "name": "Session Monitor",
+      "zip_url": "http://lightmake.site/api/v1/download?slug=session-monitor",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "code-security-auditor": {
+      "name": "Code Security Auditor",
+      "zip_url": "http://lightmake.site/api/v1/download?slug=code-security-auditor",
+      "source": "skillhub",
+      "version": "1.3.0"
+    },
+    "ai-security-scanner": {
+      "name": "Ai Security Scanner",
+      "zip_url": "http://lightmake.site/api/v1/download?slug=ai-security-scanner",
+      "source": "skillhub",
+      "version": "1.0.0"
+    },
+    "tdd-ecc": {
+      "name": "Test Driven Development",
+      "zip_url": "http://lightmake.site/api/v1/download?slug=tdd-ecc",
+      "source": "skillhub",
+      "version": "2.0.0"
+    },
+    "test-effort-estimator": {
+      "name": "PowerfulHarp2041",
+      "zip_url": "http://lightmake.site/api/v1/download?slug=test-effort-estimator",
+      "source": "skillhub",
+      "version": "1.0.0"
     }
   }
 }

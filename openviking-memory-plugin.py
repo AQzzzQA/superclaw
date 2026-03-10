@@ -8,6 +8,7 @@ OpenViking Memory Plugin for OpenClaw
 2. 从 OpenViking 检索相关记忆
 3. 自动记忆提取
 4. 分层上下文加载 (L0/L1/L2)
+5. 兼容 OpenClaw Memory 系统
 """
 
 import aiohttp
@@ -16,10 +17,50 @@ import asyncio
 from typing import Optional, List, Dict, Any, Union
 from datetime import datetime
 import logging
+import os
 
 # 配置日志
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# 兼容 OpenClaw Memory 系统
+try:
+    from memory import memory_get, memory_search, memory_write
+except ImportError:
+    # fallback to basic file operations
+    def memory_get(path: str, from_line: int = 0, lines: int = 100):
+        try:
+            with open(path, 'r', encoding='utf-8') as f:
+                lines_list = f.readlines()
+                start = from_line if from_line < len(lines_list) else 0
+                end = min(start + lines, len(lines_list))
+                return lines_list[start:end]
+        except FileNotFoundError:
+            return []
+    
+    def memory_search(query: str, max_results: int = 10):
+        # Simple keyword search in memory files
+        results = []
+        memory_dir = os.path.join(os.path.dirname(__file__), 'memory')
+        if os.path.exists(memory_dir):
+            for file in os.listdir(memory_dir):
+                if file.endswith('.md'):
+                    try:
+                        with open(os.path.join(memory_dir, file), 'r', encoding='utf-8') as f:
+                            content = f.read()
+                            if query.lower() in content.lower():
+                                results.append({
+                                    'path': file,
+                                    'content': content[:200] + '...' if len(content) > 200 else content
+                                })
+                    except:
+                        continue
+        return results[:max_results]
+    
+    def memory_write(path: str, content: str):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, 'w', encoding='utf-8') as f:
+            f.write(content)
 
 
 class OpenVikingMemoryPlugin:
@@ -197,6 +238,174 @@ class OpenVikingMemoryPlugin:
         return await self._http_post("/api/memory/store_batch", {"items": items})
 
     # ============ 检索接口 ============
+
+    async def search_memory(
+        self,
+        query: str,
+        max_results: int = 10,
+        layers: Optional[List[str]] = None,
+        start_time: Optional[str] = None,
+        end_time: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        搜索相关记忆
+
+        Args:
+            query: 搜索查询
+            max_results: 最大结果数
+            layers: 上下文层过滤（可选）
+            start_time: 开始时间（可选）
+            end_time: 结束时间（可选）
+
+        Returns:
+            搜索结果列表
+        """
+        params = {
+            "query": query,
+            "max_results": max_results,
+            "layers": layers or ["L0", "L1", "L2"],
+            "start_time": start_time,
+            "end_time": end_time
+        }
+
+        logger.info(f"Searching memories: {query}")
+        results = await self._http_get("/api/memory/search", params)
+        
+        # 兼容 OpenClaw Memory 系统
+        if not results or isinstance(results, dict) and 'error' in results:
+            fallback_results = memory_search(query, max_results)
+            for result in fallback_results:
+                result['source'] = 'fallback'
+            return fallback_results
+        
+        return results
+
+    async def get_memory(self, key: str) -> Optional[Dict[str, Any]]:
+        """
+        获取特定记忆
+
+        Args:
+            key: 记忆键
+
+        Returns:
+            记忆数据
+        """
+        result = await self._http_get(f"/api/memory/{key}")
+        return result[0] if result else None
+
+    async def get_layer_memories(self, layer: str) -> List[Dict[str, Any]]:
+        """
+        获取特定层的所有记忆
+
+        Args:
+            layer: 上下文层（L0/L1/L2）
+
+        Returns:
+            记忆列表
+        """
+        result = await self._http_get(f"/api/memory/layer/{layer}")
+        return result or []
+
+    # ============ OpenClaw 兼容接口 ============
+
+    async def store_memory(self, session_key: str, content: str, metadata: Optional[Dict] = None):
+        """
+        兼容 OpenClaw Memory 系统的记忆存储接口
+        
+        Args:
+            session_key: 会话键
+            content: 记忆内容
+            metadata: 元数据
+        """
+        # 格式：日期_会话键_类型
+        from datetime import datetime
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        memory_key = f"{timestamp}_{session_key}"
+        
+        if metadata is None:
+            metadata = {}
+        metadata.update({
+            "session_key": session_key,
+            "created_at": timestamp,
+            "source": "openclaw"
+        })
+        
+        return await self.store(memory_key, content, metadata, layer="L1")
+
+    async def load_context(self, session_key: str, max_tokens: int = 4000) -> Dict[str, Any]:
+        """
+        加载上下文，兼容 OpenClaw 会话系统
+        
+        Args:
+            session_key: 会话键
+            max_tokens: 最大令牌数
+        """
+        # 从 OpenViking 获取相关记忆
+        recent_memories = await self.search_memory(
+            query=session_key,
+            max_results=10,
+            layers=["L0", "L1"]
+        )
+        
+        # 构建上下文
+        context = {
+            "session_key": session_key,
+            "memories": recent_memories,
+            "max_tokens": max_tokens,
+            "created_at": datetime.now().isoformat()
+        }
+        
+        return context
+
+    # ============ 自动记忆提取 ============
+
+    async def extract_memory(
+        self,
+        text: str,
+        session_key: str,
+        extraction_rules: Optional[Dict[str, Any]] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        从文本中自动提取记忆
+
+        Args:
+            text: 输入文本
+            session_key: 会话键
+            extraction_rules: 提取规则（可选）
+
+        Returns:
+            提取的记忆列表
+        """
+        # 默认提取规则
+        if extraction_rules is None:
+            extraction_rules = {
+                "min_length": 10,
+                "key_phrases": ["用户偏好", "项目状态", "重要决策", "技术选型"],
+                "timestamp": True
+            }
+        
+        # 这里可以实现 NLP 处理逻辑
+        # 现在使用简单的关键词提取
+        extracted_memories = []
+        
+        if len(text) >= extraction_rules["min_length"]:
+            memory = {
+                "key": f"{session_key}_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+                "value": text,
+                "metadata": {
+                    "session_key": session_key,
+                    "extraction_method": "keyword",
+                    "extraction_rules": extraction_rules,
+                    "timestamp": datetime.now().isoformat()
+                },
+                "layer": "L1"
+            }
+            extracted_memories.append(memory)
+        
+        if extracted_memories:
+            await self.store_batch(extracted_memories)
+        
+        return extracted_memories
 
     async def retrieve(
         self,
