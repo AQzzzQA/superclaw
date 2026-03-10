@@ -51,11 +51,26 @@ class SimpleOpenClawSystem:
         print("🌐 网络搜索...")
         web_results = []
         try:
-            # 优先使用本地搜索
-            from local_web_search import local_search
-            web_results = await local_search(query, engine='wikipedia', max_results=3)
+            # 检查是否是资讯查询
+            is_news_query = any(keyword in query.lower() for keyword in ['新闻', '资讯', '最新', '百度'])
             
-            # 如果本地搜索失败，尝试 Tavily（如果可用）
+            # 如果是资讯查询，优先使用百度新闻
+            if is_news_query:
+                from baidu_news_search import get_baidu_latest_news
+                baidu_results = await get_baidu_latest_news()
+                if baidu_results:
+                    web_results = baidu_results[:3]
+                    print(f"   ✅ 百度新闻: {len(web_results)} 条")
+            
+            # 如果结果不够，使用本地搜索
+            if len(web_results) < 3:
+                from local_web_search import local_search
+                wiki_results = await local_search(query, engine='wikipedia', max_results=3)
+                if wiki_results:
+                    web_results.extend(wiki_results)
+                    print(f"   ✅ Wikipedia: {len(wiki_results)} 条")
+            
+            # 如果还不够，尝试 Tavily（如果可用）
             if not web_results:
                 try:
                     from web_search_integration import web_search
