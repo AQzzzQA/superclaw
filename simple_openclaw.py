@@ -54,41 +54,64 @@ class SimpleOpenClawSystem:
         
         try:
             # 检查是否是资讯查询
-            is_news_query = any(keyword in query.lower() for keyword in ['新闻', '资讯', '最新', '百度', '搜索', '采集', '数据'])
+            is_news_query = any(keyword in query.lower() for keyword in ['新闻', '资讯', '最新', '百度', '搜索', '采集', '数据', '登录'])
             
             # 如果是资讯/采集查询，使用数据采集器
             if is_news_query:
-                from web_data_collector import collect_news
-                collected_data = await collect_news(max_results=5)
+                from fixed_web_automation import get_fixed_automation
+                automation = get_fixed_automation()
                 
-                if collected_data:
-                    print(f"   ✅ 采集数据: {len(collected_data)} 条")
-                    # 将采集的数据转换为搜索结果格式
-                    for item in collected_data:
+                print("   📰 启动网页采集...")
+                
+                # 采集百度新闻
+                news_data = automation.extract_data("https://news.baidu.com")
+                collected_data.append({
+                    "type": "news",
+                    "data": news_data,
+                    "source": "百度新闻"
+                })
+                
+                # 如果结果不够，采集搜索结果
+                if news_data.get("extracted_data", {}).get("links_count", 0) < 3:
+                    print("   🔍 补充搜索数据采集...")
+                    search_data = automation.extract_data("https://www.baidu.com/s?wd=" + query)
+                    collected_data.append({
+                        "type": "search",
+                        "data": search_data,
+                        "source": "百度搜索"
+                    })
+                
+                print(f"   ✅ 采集完成: {len(collected_data)} 个数据源")
+                
+                # 将采集的数据转换为结果格式
+                for item in collected_data:
+                    links = item.get("data", {}).get("extracted_data", {}).get("links", [])[:3]
+                    for link in links:
                         web_results.append({
                             "type": "collected",
-                            "data": item
+                            "data": {
+                                "title": link.get("text", ""),
+                                "url": link.get("url", ""),
+                                "content": "来自网页采集的数据"
+                            }
                         })
-                else:
-                    print("   ⚠️ 数据采集使用备用数据")
             
             # 如果是普通查询，使用搜索
             if not web_results and not is_news_query:
-                # 优先使用本地搜索
                 from local_web_search import local_search
                 search_results = await local_search(query, engine='wikipedia', max_results=3)
                 
                 if search_results:
                     web_results.extend([{"type": "search", "data": r} for r in search_results])
                     print(f"   ✅ 本地搜索: {len(search_results)} 条")
-                
-                # 如果还不够，尝试百度新闻（针对资讯查询）
-                if len(web_results) < 3:
-                    from baidu_news_search import get_baidu_latest_news
-                    baidu_results = await get_baidu_latest_news()
-                    if baidu_results:
-                        web_results.extend([{"type": "baidu_news", "data": r} for r in baidu_results])
-                        print(f"   ✅ 百度新闻: {len(baidu_results)} 条")
+            
+            # 如果还不够，尝试百度新闻
+            if len(web_results) < 3:
+                from baidu_news_search import get_baidu_latest_news
+                baidu_results = await get_baidu_latest_news()
+                if baidu_results:
+                    web_results.extend([{"type": "baidu_news", "data": r} for r in baidu_results])
+                    print(f"   ✅ 百度新闻: {len(baidu_results)} 条")
             
             if web_results:
                 result["sources"].extend(web_results)
