@@ -47,42 +47,55 @@ class SimpleOpenClawSystem:
         except Exception as e:
             print(f"   ❌ 记忆搜索失败: {e}")
         
-        # 2. 网络搜索
-        print("🌐 网络搜索...")
+        # 2. 网络搜索和采集
+        print("🌐 网络搜索和采集...")
         web_results = []
+        collected_data = []
+        
         try:
             # 检查是否是资讯查询
-            is_news_query = any(keyword in query.lower() for keyword in ['新闻', '资讯', '最新', '百度'])
+            is_news_query = any(keyword in query.lower() for keyword in ['新闻', '资讯', '最新', '百度', '搜索', '采集', '数据'])
             
-            # 如果是资讯查询，优先使用百度新闻
+            # 如果是资讯/采集查询，使用数据采集器
             if is_news_query:
-                from baidu_news_search import get_baidu_latest_news
-                baidu_results = await get_baidu_latest_news()
-                if baidu_results:
-                    web_results = baidu_results[:3]
-                    print(f"   ✅ 百度新闻: {len(web_results)} 条")
+                from web_data_collector import collect_news
+                collected_data = await collect_news(max_results=5)
+                
+                if collected_data:
+                    print(f"   ✅ 采集数据: {len(collected_data)} 条")
+                    # 将采集的数据转换为搜索结果格式
+                    for item in collected_data:
+                        web_results.append({
+                            "type": "collected",
+                            "data": item
+                        })
+                else:
+                    print("   ⚠️ 数据采集使用备用数据")
             
-            # 如果结果不够，使用本地搜索
-            if len(web_results) < 3:
+            # 如果是普通查询，使用搜索
+            if not web_results and not is_news_query:
+                # 优先使用本地搜索
                 from local_web_search import local_search
-                wiki_results = await local_search(query, engine='wikipedia', max_results=3)
-                if wiki_results:
-                    web_results.extend(wiki_results)
-                    print(f"   ✅ Wikipedia: {len(wiki_results)} 条")
-            
-            # 如果还不够，尝试 Tavily（如果可用）
-            if not web_results:
-                try:
-                    from web_search_integration import web_search
-                    web_results = await web_search(query, max_results=3)
-                except:
-                    pass
+                search_results = await local_search(query, engine='wikipedia', max_results=3)
+                
+                if search_results:
+                    web_results.extend([{"type": "search", "data": r} for r in search_results])
+                    print(f"   ✅ 本地搜索: {len(search_results)} 条")
+                
+                # 如果还不够，尝试百度新闻（针对资讯查询）
+                if len(web_results) < 3:
+                    from baidu_news_search import get_baidu_latest_news
+                    baidu_results = await get_baidu_latest_news()
+                    if baidu_results:
+                        web_results.extend([{"type": "baidu_news", "data": r} for r in baidu_results])
+                        print(f"   ✅ 百度新闻: {len(baidu_results)} 条")
             
             if web_results:
-                print(f"   ✅ 网络: {len(web_results)} 条")
-                result["sources"].extend([{"type": "web", "data": r} for r in web_results])
+                result["sources"].extend(web_results)
+                print(f"   📊 网络数据: {len(web_results)} 条")
             else:
-                print("   ℹ️ 无网络信息")
+                print("   ℹ️ 无网络数据")
+                
         except Exception as e:
             print(f"   ❌ 网络搜索失败: {e}")
         
