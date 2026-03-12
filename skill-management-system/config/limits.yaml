@@ -1,0 +1,208 @@
+# Skill Management System - Installation Limits Configuration
+
+# Global installation limits
+global_limits:
+  # Maximum number of skills a user can install system-wide
+  max_user_skills: 50
+  
+  # Maximum number of skills a workspace can have
+  max_workspace_skills: 200
+  
+  # Maximum number of workspaces a user can belong to
+  max_user_workspaces: 10
+  
+  # Global skill installation rate limit (per hour)
+  global_rate_limit: 100
+  
+  # Maximum concurrent installations per user
+  max_concurrent_installations: 3
+
+# Workspace-specific limits
+workspace_limits:
+  # Default limits for new workspaces
+  default:
+    max_skills: 100
+    max_users: 50
+    max_admins: 3
+    max_rate_per_hour: 20
+    max_storage_gb: 10
+  
+  # Premium workspace with higher limits
+  premium:
+    max_skills: 500
+    max_users: 200
+    max_admins: 10
+    max_rate_per_hour: 100
+    max_storage_gb: 100
+  
+  # Free workspace with limited features
+  free:
+    max_skills: 30
+    max_users: 10
+    max_admins: 1
+    max_rate_per_hour: 10
+    max_storage_gb: 1
+
+# User-specific limits
+user_limits:
+  # Default limits for new users
+  default:
+    max_skills_per_workspace: 20
+    max_installations_per_hour: 10
+    max_skill_size_mb: 100
+    max_api_calls_per_hour: 1000
+  
+  # Power user with higher limits
+  power_user:
+    max_skills_per_workspace: 50
+    max_installations_per_hour: 50
+    max_skill_size_mb: 500
+    max_api_calls_per_hour: 5000
+  
+  # Basic user with restricted limits
+  basic_user:
+    max_skills_per_workspace: 10
+    max_installations_per_hour: 5
+    max_skill_size_mb: 50
+    max_api_calls_per_hour: 500
+
+# Skill category limits
+category_limits:
+  system:
+    max_instances: 5
+    min_required_level: "admin"
+    installation_approval: true
+  
+  business:
+    max_instances: 20
+    min_required_level: "workspace_admin"
+    installation_approval: false
+  
+  development:
+    max_instances: 50
+    min_required_level: "user"
+    installation_approval: false
+  
+  general:
+    max_instances: 100
+    min_required_level: "viewer"
+    installation_approval: false
+  
+  security:
+    max_instances: 3
+    min_required_level: "admin"
+    installation_approval: true
+    additional_verification: true
+
+# Resource limits
+resource_limits:
+  # Storage limits by skill category
+  storage:
+    system: "1GB"
+    business: "5GB"
+    development: "10GB"
+    general: "2GB"
+    security: "500MB"
+  
+  # Memory usage limits
+  memory:
+    per_skill_mb: 512
+    per_workspace_gb: 4
+    system_total_gb: 16
+  
+  # CPU usage limits
+  cpu:
+    per_skill_percent: 5
+    per_workspace_percent: 20
+    system_total_percent: 80
+  
+  # Network usage limits
+  network:
+    per_skill_gb_per_day: 1
+    per_workspace_gb_per_day: 10
+    system_total_gb_per_day: 100
+
+# Time-based limits
+time_limits:
+  # Installation time limits
+  installation:
+    max_duration_hours: 24
+    retry_attempts: 3
+    retry_delay_minutes: 5
+  
+  # Skill usage time limits
+  usage:
+    max_idle_hours: 168  # 7 days
+    max_concurrent_hours: 720  # 30 days
+  
+  # Audit log retention
+  audit_retention:
+    days: 90
+    compressed: true
+
+# Rate limiting configuration
+rate_limits:
+  # Global rate limits
+  global:
+    requests_per_minute: 1000
+    requests_per_hour: 10000
+    requests_per_day: 100000
+  
+  # User rate limits
+  user:
+    requests_per_minute: 100
+    requests_per_hour: 1000
+    requests_per_day: 10000
+  
+  # Workspace rate limits
+  workspace:
+    requests_per_minute: 500
+    requests_per_hour: 5000
+    requests_per_day: 50000
+
+# Alert thresholds
+alert_thresholds:
+  # Storage usage alerts
+  storage:
+    warning_percent: 80
+    critical_percent: 90
+  
+  # Memory usage alerts
+  memory:
+    warning_percent: 75
+    critical_percent: 90
+  
+  # CPU usage alerts
+  cpu:
+    warning_percent: 70
+    critical_percent: 85
+  
+  # Installation failure alerts
+  installation_failures:
+    consecutive_failures: 5
+    time_window_hours: 1
+  
+  # Permission violation alerts
+  permission_violations:
+    violations_per_hour: 10
+    time_window_hours: 24
+
+# Compliance limits
+compliance:
+  # Data retention policies
+  data_retention:
+    user_data_years: 7
+    audit_logs_years: 3
+    skill_logs_years: 2
+  
+  # Access control policies
+  access_control:
+    password_expires_days: 90
+    session_timeout_hours: 8
+    two_factor_required: true
+  
+  # Audit requirements
+  audit_required:
+    installation_audit: true
+    permission_audit: true
+    system_change_audit: true

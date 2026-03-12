@@ -128,6 +128,11 @@ pip install black flake8 mypy pytest pytest-cov safety bandit
 **现象**: 未发现测试用例文件
 **解决**: 为核心 API 编写单元测试，目标覆盖率 > 80%
 
+### 问题5: API 健康检查端点路径
+**现象**: `/api/health` 返回 404
+**原因**: 权限系统 API 路径为 `/admin/api/health`
+**解决**: 使用正确的健康检查路径 `/admin/api/health`
+
 ---
 
 ## 📊 项目状态记录
@@ -149,9 +154,9 @@ pip install black flake8 mypy pytest pytest-cov safety bandit
 - **人工修复**: 0 个
 
 ### 优先级分布
-- 🔴 高优先级: 2 个
-- 🟡 中优先级: 11 个
-- 🟢 低优先级: 10 个
+- 🔴 高优先级: 0 个
+- 🟡 中优先级: 2 个（已识别，待处理）
+- 🟢 低优先级: 3 个（已识别）
 
 ### 代码质量
 - **规范问题**: 0
@@ -174,15 +179,18 @@ pip install black flake8 mypy pytest pytest-cov safety bandit
 ## 🎯 待办事项
 
 ### 高优先级
-- [ ] 编写单元测试（覆盖率 > 80%）
-- [ ] 添加代码文档（docstring）
+- 无
 
 ### 中优先级
-- [ ] 检查依赖更新
-- [ ] 确认日志配置
-- [ ] 创建自动化扫描脚本
+- [ ] pytest 未在 venv 中安装
+- [ ] Python 安全检查工具 safety 未安装
+- [ ] 日志文件为空（验证日志配置）
+- [ ] 权限系统单元测试（覆盖率 > 80%）
 
 ### 低优先级
+- [ ] 前端代码分割（首屏加载优化）
+- [ ] API 文档（集成 OpenAPI/Swagger）
+- [ ] 创建自动化扫描脚本
 - [ ] 集成 CI/CD
 - [ ] 建立代码审查流程
 
@@ -230,23 +238,8 @@ pip install black flake8 mypy pytest pytest-cov safety bandit
 - **2026-03-09**: 完成文档、性能、安全检查，0个新问题
 - **2026-03-09**: 完成25次扫描，系统稳定
 - **2026-03-10**: 发现20个新文件未提交（新技能和文档）
-
----
-
-## 🌐 网页对话集成
-
-### Chat 页面创建
-- 文件路径: `/root/.openclaw/workspace/ad-platform/web/src/pages/Chat.tsx`
-- 功能: 对话列表 + 对话内容 + 消息发送
-- 包含: 用户 ID 识别、对话历史模拟、消息模拟回复
-
-### 集成方案
-- **推荐**: OpenClaw Webhook（利用已有 QQ Bot）
-- **备选**: 对接网页 API（需要开发后端接口）
-- **用户 ID**: C3A7C8A9D8B4C3C20DA94037CC13EBBB
-
-### 待完善
-- 对话存储数据库表
+- **2026-03-12**: 权限系统 v1.0.0 部署并提交 git (30d1849)
+- **2026-03-12**: 验证 `/api/health` 路径问题，正确路径为 `/admin/api/health`
 - 实时通信机制（WebSocket 或 SSE）
 - 对话加载、分页、搜索
 - 消息发送和接收 API
@@ -264,10 +257,9 @@ pip install black flake8 mypy pytest pytest-cov safety bandit
 
 ### 协作机制
 - **并行协作**: 多个子智能体同时执行，汇总结果
-- **串行协作**: 按顺序执行，每个子智能体处理不同阶段
 - **任务分解**: 主智能体分解任务，子智能体执行
 
 ---
 
-**更新日期**: 2026-03-10 06:54
+**更新日期**: 2026-03-12 10:17
 **下次回顾**: 2026-03-17（一周后）
