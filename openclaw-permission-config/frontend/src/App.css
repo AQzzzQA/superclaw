@@ -1,0 +1,233 @@
+/* App全局样式 */
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* 布局样式 */
+.site-layout {
+  min-height: 100vh;
+}
+
+.site-layout-background {
+  background: #fff;
+}
+
+/* 页面标题样式 */
+.page-title {
+  margin-bottom: 16px;
+}
+
+.page-description {
+  color: #666;
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+/* 统计卡片样式 */
+.stat-card {
+  text-align: center;
+  border-radius: 8px;
+}
+
+/* 快捷按钮样式 */
+.quick-action-btn {
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.quick-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 表格样式增强 */
+.ant-table-wrapper {
+  margin-top: 16px;
+}
+
+.ant-table-thead > tr > th {
+  background-color: #fafafa;
+  font-weight: 600;
+}
+
+/* 权限标签样式 */
+.permission-tag {
+  margin-right: 4px;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+/* 角色标签样式 */
+.role-tag {
+  font-weight: 500;
+}
+
+/* 模态框样式 */
+.modal-container {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* 表单样式增强 */
+.form-section {
+  margin-bottom: 24px;
+  padding: 16px;
+  border: 1px solid #f0f0f0;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.form-section-title {
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+/* 状态指示器样式 */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-indicator.success {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+.status-indicator.warning {
+  background: #fffbe6;
+  color: #faad14;
+}
+
+.status-indicator.error {
+  background: #fff1f0;
+  color: #ff4d4f;
+}
+
+.status-indicator.info {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+
+/* 加载动画样式 */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+/* 空状态样式 */
+.empty-state {
+  text-align: center;
+  padding: 48px;
+  color: #8c8c8c;
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .quick-action-btn {
+    height: 80px;
+  }
+  
+  .ant-card {
+    margin-bottom: 16px;
+  }
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 工具提示样式 */
+.ant-tooltip {
+  max-width: 300px;
+}
+
+/* 标签样式增强 */
+.custom-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+/* 按钮组样式 */
+.button-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* 搜索栏样式 */
+.search-container {
+  margin-bottom: 16px;
+}
+
+.search-input {
+  max-width: 300px;
+}
+
+/* 分页样式 */
+.pagination-container {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 卡片样式增强 */
+.custom-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.custom-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}

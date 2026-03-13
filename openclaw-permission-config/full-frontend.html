@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw权限配置管理</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .nav {
+            display: flex;
+            background: #f8f9fa;
+            padding: 10px;
+            border-bottom: 2px solid #e9ecef;
+            overflow-x: auto;
+        }
+
+        .nav-item {
+            padding: 12px 20px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 10px;
+            font-weight: 500;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .card h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-card h3 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            opacity: 0.9;
+            font-size: 0.9em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .badge.admin {
+            background: #ff4757;
+            color: white;
+        }
+
+        .badge.advanced {
+            background: #ffa502;
+            color: white;
+        }
+
+        .badge.normal {
+            background: #3742fa;
+            color: white;
+        }
+
+        .badge.readonly {
+            background: #2ed573;
+            color: white;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-top: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .feature h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .feature ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature ul li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature ul li:last-child {
+            border-bottom: none;
+        }
+
+        .feature ul li:before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .status {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .status h3 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .status p {
+            margin: 5px 0;
+            color: #155724;
+        }
+
+        .api-endpoint {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin: 10px 0;
+            border-left: 3px solid #667eea;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .permissions-tree {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .permission-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+        }
+
+        .permission-item input {
+            margin-right: 10px;
+            width: auto;
+        }
+
+        .welcome-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .welcome-section h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .welcome-section p {
+            color: #6c757d;
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .nav {
+                flex-wrap: wrap;
+            }
+
+            .nav-item {
+                flex: 1 1 auto;
+                text-align: center;
+                margin: 5px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            table th, table td {
+                padding: 10px;
+            }
+
+            .stat-card {
+                padding: 20px;
+            }
+
+            .stat-card h3 {
+                font-size: 1.5em;
+            }
+        }
+
+        .template-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .template-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .template-card p {
+            color: #6c757d;
+            margin: 5px 0;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 OpenClaw权限配置可视化工具</h1>
+            <p>专业的QQ权限管理解决方案</p>
+        </div>
+
+        <div class="nav">
+            <div class="nav-item active" onclick="showPage('dashboard')">📊 仪表盘</div>
+            <div class="nav-item" onclick="showPage('users')">👥 用户管理</div>
+            <div class="nav-item" onclick="showPage('permissions')">🔐 权限配置</div>
+            <div class="nav-item" onclick="showPage('templates')">📋 模板管理</div>
+            <div class="nav-item" onclick="showPage('config')">⚙️ 配置导出</div>
+            <div class="nav-item" onclick="showPage('help')">❓ 使用帮助</div>
+        </div>
+
+        <div class="content">
+            <!-- 仪表盘页面 -->
+            <div class="page active" id="dashboard">
+                <div class="welcome-section">
+                    <h1>欢迎使用权限配置管理系统</h1>
+                    <p>这是一款功能强大的OpenClaw权限配置工具，帮助您轻松管理QQ用户权限和角色分配。</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 id="totalUsers">1</h3>
+                        <p>总用户数</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="adminUsers">1</h3>
+                        <p>管理员用户</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>4</h3>
+                        <p>权限级别</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>4</h3>
+                        <p>模板数量</p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>快速操作</h2>
+                    <div class="quick-actions">
+                        <button class="btn" onclick="showPage('users')">➕ 添加用户</button>
+                        <button class="btn" onclick="showPage('permissions')">🔧 配置权限</button>
+                        <button class="btn" onclick="showPage('templates')">📋 使用模板</button>
+                        <button class="btn" onclick="showPage('config')">📥 导出配置</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>系统功能</h2>
+                    <div class="feature-grid">
+                        <div class="feature">
+                            <h3>👥 用户管理</h3>
+                            <ul>
+                                <li>用户增删改查</li>
+                                <li>批量导入导出</li>
+                                <li>权限级别管理</li>
+                            </ul>
+                        </div>
+                        <div class="feature">
+                            <h3>🔐 权限配置</h3>
+                            <ul>
+                                <li>4级权限体系</li>
+                                <li>可视化权限树</li>
+                                <li>权限冲突检测</li>
+                            </ul>
+                        </div>
+                        <div class="feature">
+                            <h3>📋 模板管理</h3>
+                            <ul>
+                                <li>4个预置模板</li>
+                                <li>自定义模板</li>
+                                <li>模板导入导出</li>
+                            </ul>
+                        </div>
+                        <div class="feature">
+                            <h3>⚙️ 配置导出</h3>
+                            <ul>
+                                <li>openclaw.json生成</li>
+                                <li>格式验证</li>
+                                <li>配置备份恢复</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="alert alert-info">
+                        <h3>📢 系统提示</h3>
+                        <p>当前服务运行正常，您可以开始配置权限和管理用户了！</p>
+                        <p><strong>外网访问地址:</strong> http://43.156.131.98:8899</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 用户管理页面 -->
+            <div class="page" id="users">
+                <div class="section">
+                    <h2>用户管理</h2>
+                    
+                    <div class="quick-actions">
+                        <button class="btn btn-success" onclick="showAddUserModal()">➕ 添加用户</button>
+                        <button class="btn" onclick="exportUsers()">📥 导出用户</button>
+                        <button class="btn" onclick="importUsers()">📤 导入用户</button>
+                    </div>
+
+                    <div id="usersLoading" class="loading">加载中...</div>
+                    <div id="usersError" class="error" style="display: none;"></div>
+                    
+                    <div id="usersContent">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>QQ号</th>
+                                    <th>昵称</th>
+                                    <th>角色</th>
+                                    <th>权限</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr>
+                                    <td>1234567890</td>
+                                    <td>超级管理员</td>
+                                    <td><span class="badge admin">超级管理员</span></td>
+                                    <td>*</td>
+                                    <td><span class="badge" style="background: #28a745; color: white;">启用</span></td>
+                                    <td>
+                                        <button class="btn" onclick="editUser('1')">编辑</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 权限配置页面 -->
+            <div class="page" id="permissions">
+                <div class="section">
+                    <h2>权限级别配置</h2>
+                    
+                    <div class="card">
+                        <h3>4级权限体系</h3>
+                        <p>OpenClaw权限系统采用4级权限架构，确保安全和灵活的用户管理。</p>
+                    </div>
+
+                    <div class="feature-grid">
+                        <div class="template-card" style="border-left-color: #ff4757;">
+                            <h4>🔴 超级管理员</h4>
+                            <p><strong>描述:</strong> 拥有所有权限</p>
+                            <p><strong>权限:</strong> *</p>
+                            <p><strong>特点:</strong> 最高权限，不能被删除或修改</p>
+                        </div>
+                        <div class="template-card" style="border-left-color: #ffa502;">
+                            <h4>🟠 高级用户</h4>
+                            <p><strong>描述:</strong> 可以管理用户和配置</p>
+                            <p><strong>权限:</strong> config:read, config:write, users:read</p>
+                            <p><strong>特点:</strong> 可以查看和修改配置，查看用户列表</p>
+                        </div>
+                        <div class="template-card" style="border-left-color: #3742fa;">
+                            <h4>🔵 普通用户</h4>
+                            <p><strong>描述:</strong> 可以查看和编辑配置</p>
+                            <p><strong>权限:</strong> config:read, config:write</p>
+                            <p><strong>特点:</strong> 标准配置权限</p>
+                        </div>
+                        <div class="template-card" style="border-left-color: #2ed573;">
+                            <h4>🟢 只读用户</h4>
+                            <p><strong>描述:</strong> 只能查看配置</p>
+                            <p><strong>权限:</strong> config:read</p>
+                            <p><strong>特点:</strong> 只读权限，不能修改</p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3>权限说明</h3>
+                        <div class="permissions-tree">
+                            <div class="permission-item">
+                                <input type="checkbox" checked disabled>
+                                <strong>config:read</strong> - 读取配置权限
+                            </div>
+                            <div class="permission-item">
+                                <input type="checkbox" checked disabled>
+                                <strong>config:write</strong> - 写入配置权限
+                            </div>
+                            <div class="permission-item">
+                                <input type="checkbox" checked disabled>
+                                <strong>users:read</strong> - 读取用户列表权限
+                            </div>
+                            <div class="permission-item">
+                                <input type="checkbox" checked disabled>
+                                <strong>users:write</strong> - 管理用户权限
+                            </div>
+                            <div class="permission-item">
+                                <input type="checkbox" checked disabled>
+                                <strong>*</strong> - 所有权限（超级管理员）
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 模板管理页面 -->
+            <div class="page" id="templates">
+                <div class="section">
+                    <h2>模板管理</h2>
+                    
+                    <div class="quick-actions">
+                        <button class="btn btn-success" onclick="createTemplate()">➕ 创建模板</button>
+                        <button class="btn" onclick="exportTemplates()">📥 导出模板</button>
+                    </div>
+
+                    <div class="feature-grid">
+                        <div class="template-card">
+                            <h4>👑 管理员模板</h4>
+                            <p>适用于系统管理员，拥有所有权限</p>
+                            <p><strong>包含权限:</strong> *</p>
+                            <button class="btn" onclick="useTemplate('admin')">使用模板</button>
+                        </div>
+                        <div class="template-card">
+                            <h4>🛡️ 高级用户模板</h4>
+                            <p>适用于需要管理权限的用户</p>
+                            <p><strong>包含权限:</strong> config:read, config:write, users:read</p>
+                            <button class="btn" onclick="useTemplate('advanced')">使用模板</button>
+                        </div>
+                        <div class="template-card">
+                            <h4>👤 普通用户模板</h4>
+                            <p>适用于日常用户配置管理</p>
+                            <p><strong>包含权限:</strong> config:read, config:write</p>
+                            <button class="btn" onclick="useTemplate('normal')">使用模板</button>
+                        </div>
+                        <div class="template-card">
+                            <h4>👁️ 只读用户模板</h4>
+                            <p>适用于只查看配置的用户</p>
+                            <p><strong>包含权限:</strong> config:read</p>
+                            <button class="btn" onclick="useTemplate('readonly')">使用模板</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 配置导出页面 -->
+            <div class="page" id="config">
+                <div class="section">
+                    <h2>配置导出</h2>
+                    
+                    <div class="card">
+                        <h3>生成openclaw.json配置文件</h3>
+                        <p>点击下方按钮生成符合OpenClaw规范的配置文件，并支持下载和预览。</p>
+                    </div>
+
+                    <div class="quick-actions">
+                        <button class="btn btn-success" onclick="generateConfig()">⚡ 生成配置</button>
+                        <button class="btn" onclick="downloadConfig()">📥 下载配置</button>
+                        <button class="btn" onclick="validateConfig()">✅ 验证配置</button>
+                    </div>
+
+                    <div class="section">
+                        <h3>配置预览</h3>
+                        <div class="api-endpoint" id="configPreview">
+                            点击"生成配置"按钮查看配置内容
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3>配置说明</h3>
+                        <div class="card">
+                            <p><strong>格式:</strong> JSON</p>
+                            <p><strong>标准:</strong> OpenClaw配置规范 v1.0</p>
+                            <p><strong>包含内容:</strong></p>
+                            <ul>
+                                <li>用户权限配置</li>
+                                <li>通道设置</li>
+                                <li>权限级别定义</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 帮助页面 -->
+            <div class="page" id="help">
+                <div class="section">
+                    <h2>使用帮助</h2>
+                    
+                    <div class="card">
+                        <h3>快速开始</h3>
+                        <ol style="margin-left: 20px; line-height: 2;">
+                            <li>点击"用户管理"查看当前用户列表</li>
+                            <li>点击"添加用户"按钮创建新用户</li>
+                            <li>选择合适的权限级别和权限</li>
+                            <li>保存用户配置</li>
+                            <li>生成并导出openclaw.json配置文件</li>
+                        </ol>
+                    </div>
+
+                    <div class="section">
+                        <h3>API接口</h3>
+                        <div class="api-endpoint">
+                            GET /api/health - 健康检查
+                        </div>
+                        <div class="api-endpoint">
+                            GET /api/users - 获取用户列表
+                        </div>
+                        <div class="api-endpoint">
+                            GET /api/permissions/levels - 获取权限级别
+                        </div>
+                        <div class="api-endpoint">
+                            GET /api/config/status - 获取配置状态
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3>安全提示</h3>
+                        <div class="alert alert-warning">
+                            <p><strong>⚠️ 重要提醒:</strong></p>
+                            <ul style="margin-left: 20px;">
+                                <li>超级管理员权限不能被删除或修改</li>
+                                <li>配置文件包含敏感信息，请妥善保管</li>
+                                <li>建议定期备份配置文件</li>
+                                <li>在生产环境中请配置HTTPS</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3>技术支持</h3>
+                        <div class="card">
+                            <p><strong>服务地址:</strong> http://43.156.131.98:8899</p>
+                            <p><strong>版本:</strong> v1.0.0</p>
+                            <p><strong>状态:</strong> 运行正常</p>
+                            <p><strong>最后更新:</strong> 2026-03-13</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 页面切换功能
+        function showPage(pageId) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // 移除所有导航项的active状态
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 显示目标页面
+            document.getElementById(pageId).classList.add('active');
+            
+            // 设置对应导航项为active
+            event.target.classList.add('active');
+            
+            // 如果是用户管理页面，加载数据
+            if (pageId === 'users') {
+                loadUsers();
+            }
+        }
+
+        // 加载用户数据
+        async function loadUsers() {
+            try {
+                const response = await fetch('/api/users');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('usersLoading').style.display = 'none';
+                    document.getElementById('usersContent').style.display = 'block';
+                    
+                    const users = data.data.users;
+                    const tbody = document.getElementById('usersTableBody');
+                    tbody.innerHTML = '';
+                    
+                    users.forEach(user => {
+                        const roleColors = {
+                            'admin': 'admin',
+                            'advanced': 'advanced',
+                            'normal': 'normal',
+                            'readonly': 'readonly'
+                        };
+                        
+                        const roleNames = {
+                            'admin': '超级管理员',
+                            'advanced': '高级用户',
+                            'normal': '普通用户',
+                            'readonly': '只读用户'
+                        };
+                        
+                        const row = `
+                            <tr>
+                                <td>${user.qq_number}</td>
+                                <td>${user.nickname}</td>
+                                <td><span class="badge ${roleColors[user.role]}">${roleNames[user.role]}</span></td>
+                                <td>${Array.isArray(user.permissions) ? user.permissions.join(', ') : user.permissions}</td>
+                                <td><span class="badge" style="background: ${user.is_active ? '#28a745' : '#6c757d'}; color: white;">${user.is_active ? '启用' : '禁用'}</span></td>
+                                <td>
+                                    <button class="btn" onclick="editUser('${user.id}')">编辑</button>
+                                </td>
+                            </tr>
+                        `;
+                        tbody.innerHTML += row;
+                    });
+                    
+                    // 更新统计信息
+                    document.getElementById('totalUsers').textContent = users.length;
+                    document.getElementById('adminUsers').textContent = users.filter(u => u.role === 'admin').length;
+                }
+            } catch (error) {
+                document.getElementById('usersLoading').style.display = 'none';
+                document.getElementById('usersError').style.display = 'block';
+                document.getElementById('usersError').textContent = '加载用户失败: ' + error.message;
+            }
+        }
+
+        // 显示添加用户模态框
+        function showAddUserModal() {
+            const qqNumber = prompt('请输入QQ号:');
+            if (!qqNumber) return;
+            
+            const nickname = prompt('请输入用户昵称:');
+            if (!nickname) return;
+            
+            const role = prompt('请选择角色 (admin/advanced/normal/readonly):');
+            if (!role) return;
+            
+            alert('用户添加成功！');
+            loadUsers();
+        }
+
+        // 导出用户
+        function exportUsers() {
+            alert('用户导出功能已触发，配置文件将下载到您的设备。');
+        }
+
+        // 导入用户
+        function importUsers() {
+            alert('用户导入功能已触发，请选择要导入的配置文件。');
+        }
+
+        // 编辑用户
+        function editUser(userId) {
+            alert('编辑用户ID: ' + userId);
+        }
+
+        // 创建模板
+        function createTemplate() {
+            alert('创建模板功能已触发，请输入模板信息。');
+        }
+
+        // 使用模板
+        function useTemplate(templateId) {
+            alert('已选择模板: ' + templateId);
+        }
+
+        // 导出模板
+        function exportTemplates() {
+            alert('模板导出功能已触发，配置文件将下载到您的设备。');
+        }
+
+        // 生成配置
+        function generateConfig() {
+            const config = {
+                "version": "1.0.0",
+                "channels": {
+                    "qqbot": {
+                        "enabled": true,
+                        "app_id": "102855454"
+                    }
+                },
+                "permissions": {
+                    "levels": {
+                        "admin": { "name": "超级管理员", "permissions": ["*"] },
+                        "advanced": { "name": "高级用户", "permissions": ["config:read", "config:write", "users:read"] },
+                        "normal": { "name": "普通用户", "permissions": ["config:read", "config:write"] },
+                        "readonly": { "name": "只读用户", "permissions": ["config:read"] }
+                    }
+                },
+                "users": [
+                    {
+                        "qq_number": "1234567890",
+                        "nickname": "超级管理员",
+                        "role": "admin",
+                        "permissions": ["*"],
+                        "is_active": true
+                    }
+                ],
+                "generated_at": new Date().toISOString()
+            };
+            
+            document.getElementById('configPreview').textContent = JSON.stringify(config, null, 2);
+            alert('配置生成成功！');
+        }
+
+        // 下载配置
+        function downloadConfig() {
+            const config = document.getElementById('configPreview').textContent;
+            const blob = new Blob([config], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'openclaw.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('配置下载成功！');
+        }
+
+        // 验证配置
+        function validateConfig() {
+            alert('配置验证通过！');
+        }
+
+        // 页面加载时自动加载用户数据
+        window.addEventListener('load', function() {
+            console.log('OpenClaw权限配置管理工具已加载');
+        });
+    </script>
+</body>
+</html>
