@@ -30,6 +30,12 @@ server.log
 memory/heartbeat-state.json.bak
 memory/*.bak
 
+# Backups (keep only backup scripts in git)
+backups/*.bak
+backups/*.txt
+backups/*/backup.log
+!backups/**/
+
 # Backups
 *.tar.gz
 *.backup

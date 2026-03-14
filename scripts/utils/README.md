@@ -10,6 +10,7 @@ Testing, demos, and utility scripts for development and debugging.
 - **test-memory-service.py**: Memory service unit tests
 - **manage-memory-service.sh**: Memory service management script
 - **start-memory-service.py**: Memory service startup script
+- **backup-config.sh**: Configuration file backup script (daily at 00:00)
 
 ### Demo Scripts
 - **web_search_demo.py**: Web search API demonstration
@@ -38,6 +39,27 @@ python scripts/utils/test-memory-service.py
 # Manage memory service
 bash scripts/utils/manage-memory-service.sh status
 ```
+
+### Backup Configuration
+```bash
+# Backup configuration files (recommended to run via cron)
+bash scripts/utils/backup-config.sh
+```
+
+**Files backed up**:
+- `.env` - Environment variables
+- `MEMORY.md` - Long-term memory
+- `IDENTITY.md` - AI identity
+- `SOUL.md` - Core values
+- `TOOLS.md` - Tool-specific notes
+- `USER.md` - User preferences
+- `AGENTS.md` - Workspace rules
+- `HEARTBEAT.md` - Self-enhancement tasks
+- `memory/heartbeat-state.json` - Status tracking
+
+**Backup location**: `/root/.openclaw/workspace/backups/config/`
+
+**Retention**: Keeps backups for 7 days, automatically cleans up old backups
 
 ### Web Search Demo
 ```bash

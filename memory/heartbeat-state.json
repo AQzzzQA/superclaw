@@ -2,15 +2,16 @@
   "lastChecks": {
     "code_health": 1773505615,
     "dependencies": 1773144600,
-    "docs": 1773509500,
+    "docs": 1773510600,
     "performance": 1773296649,
     "security": 1773148200,
-    "general": 1773509500,
-    "system": 1773509500,
+    "general": 1773510600,
+    "system": 1773510600,
     "git": 1773509500,
-    "workspace": 1773509500
+    "workspace": 1773509500,
+    "backup": 1773510600
   },
-  "lastReport": "2026-03-15 01:25",
+  "lastReport": "2026-03-15 01:17",
   "stats": {
     "totalIssues": 23,
     "fixedIssues": 12,
@@ -19,17 +20,19 @@
     "pendingIssues": 7
   },
   "healthScore": 5,
-  "uptime": "2天10小时",
+  "uptime": "2天11小时",
   "services": {
     "docker": "运行正常",
-    "management_ui": "running"
+    "management_ui": "running",
+    "backup": "已配置"
   },
   "recentTasks": [
     "page-agent 集成完成 100%",
     "GLM-4.6V 模型集成完成 100%",
     "总体进度达到 100%",
     "Git 提交并推送到 GitHub",
-    "工作区完全重构（4大目录，18个脚本，25个文档归档）"
+    "工作区完全重构（4大目录，18个脚本，25个文档归档）",
+    "配置文件备份系统已部署（每天00:00自动备份）"
   ],
   "organization": {
     "projects": 3,
@@ -41,8 +44,16 @@
     "addedLines": 861,
     "reorganizedFiles": 185
   },
+  "backup": {
+    "enabled": true,
+    "schedule": "0 0 * * *",
+    "filesBackedUp": 9,
+    "firstBackup": "2026-03-15 01:16:44",
+    "retentionDays": 7,
+    "location": "/root/.openclaw/workspace/backups/config/"
+  },
   "checkCounts": {
-    "total": 153,
-    "today": 2
+    "total": 154,
+    "today": 3
   }
 }
