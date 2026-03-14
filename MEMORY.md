@@ -258,6 +258,62 @@ pip install black flake8 mypy pytest pytest-cov safety bandit
 - **2026-03-13 12:45**: 完成第145次系统健康检查，系统持续稳定运行（21小时20分钟），累计自动修复12次
 - **2026-03-13 13:15**: 完成第146次系统健康检查，系统持续稳定运行（21小时50分钟），累计自动修复12次
 - **2026-03-14**: 成功集成阿里巴巴 page-agent 项目到技能生态，创建技能文档和示例代码
+- **2026-03-14**: 成功集成 GLM-4.6V 模型到 OpenClaw，API 基础测试通过
+
+---
+
+## 🆕 GLM-4.6V 模型集成（2026-03-14）
+
+### 模型信息
+- **模型 ID**: glm-4.6v
+- **提供商**: 智谱 AI (GLM Code)
+- **API 地址**: https://open.bigmodel.cn/api/paas/v4/chat/completions
+- **API 协议**: OpenAI Chat Completions API 兼容
+- **上下文窗口**: 200,000 tokens
+- **最大输出**: 8,192 tokens
+
+### 集成状态
+✅ **已集成** - 模型配置已添加到 `/root/.openclaw/agents/main/agent/models.json`
+
+### 测试结果
+- ✅ **API 连接**: 正常
+- ✅ **基础对话**: 通过 - 回复流畅自然
+- ✅ **简单数学**: 通过 - 准确无误
+- ⚠️ **代码生成**: 超时 - 需要增加超时时间（建议 60 秒）
+
+### 测试文件
+- `/root/.openclaw/workspace/skills/glm-4.6v-test/` - 测试脚本目录
+- `quick-test.js` - 快速测试（3 个测试）
+- `README.md` - 完整使用文档
+- `TEST-RESULTS.md` - 测试报告
+
+### 使用示例
+```javascript
+const response = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_API_KEY'
+  },
+  body: JSON.stringify({
+    model: 'glm-4.6v',
+    messages: [{ role: 'user', content: '你好' }],
+    max_tokens: 2000,
+    temperature: 0.7
+  })
+});
+```
+
+### 超时配置建议
+- **简单对话**: 10 秒
+- **复杂推理**: 30 秒
+- **代码生成**: 60 秒
+- **长文本生成**: 120 秒
+
+### 相关资源
+- 📖 [智谱 AI 文档](https://open.bigmodel.cn/dev/api)
+- 🏠 [智谱 AI 官网](https://www.zhipuai.cn/)
+- 💻 [GitHub 仓库](https://github.com/THUDM/GLM-4)
 
 ---
 
