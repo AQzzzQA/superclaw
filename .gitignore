@@ -22,10 +22,13 @@ yarn.lock
 
 # OpenClaw
 .openclaw/
-memory/
 .env
 *.log
 server.log
+
+# Memory (but keep heartbeat-state.json and daily logs)
+memory/heartbeat-state.json.bak
+memory/*.bak
 
 # Backups
 *.tar.gz
