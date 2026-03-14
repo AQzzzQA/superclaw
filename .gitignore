@@ -1,34 +1,76 @@
-# Dependencies
-node_modules/
+# Python
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# OpenClaw
+.openclaw/
+memory/
+.env
+*.log
+server.log
+
+# Backups
+*.tar.gz
+*.backup
+*.bak
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# Logs
-logs/
-*.log
-
-# Environment
-.env
-.env.local
-
-# Build outputs
-dist/
-build/
-*.tgz
-
-# OS
+*~
 .DS_Store
-Thumbs.db
 
-# Page Agent 原始仓库（已作为子模块）
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Large files
+ad-platform/venv/
+page-agent/node_modules/
 page-agent/.git/
 
-# OpenClaw
-memory/
+# Archives
+archived/
+
+# Test coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Project specific
+ad-platform/.env
+ad-platform/logs/*.log
+stock_data.json
+
+# Deprecated projects
+oceanengine-ads/
+stocks_analysis/
+LemClaw/
+openclaw-permission-config/
+openclaw-permission-manager/
+skill-management-system/
+superclaw.backup/
+
+# Lock files
+.git/gc.log
