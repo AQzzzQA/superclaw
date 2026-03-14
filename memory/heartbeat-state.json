@@ -1,14 +1,15 @@
 {
   "lastChecks": {
-    "code_health": 1740088225,
+    "code_health": 1773505615,
     "dependencies": 1740069464,
-    "docs": 1740069464,
+    "docs": 1773505615,
     "performance": 1740069464,
     "security": 1740069464,
-    "general": 1740072420,
-    "system": 1740073046
+    "general": 1773505615,
+    "system": 1740073046,
+    "git": 1773505615
   },
-  "lastReport": "2026-03-15 00:14",
+  "lastReport": "2026-03-15 00:26",
   "stats": {
     "totalIssues": 23,
     "fixedIssues": 12,
@@ -17,14 +18,19 @@
     "pendingIssues": 7
   },
   "healthScore": 5,
-  "uptime": "2天8小时",
+  "uptime": "2天9小时",
   "services": {
-    "docker": "检查中...",
+    "docker": "运行正常",
     "management_ui": "running"
   },
   "recentTasks": [
     "page-agent 集成完成 100%",
     "GLM-4.6V 模型集成完成 100%",
-    "总体进度达到 100%"
-  ]
+    "总体进度达到 100%",
+    "Git 提交并推送到 GitHub"
+  ],
+  "checkCounts": {
+    "total": 152,
+    "today": 1
+  }
 }
