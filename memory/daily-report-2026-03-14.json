@@ -1,0 +1,109 @@
+{
+  "date": "2026-03-14",
+  "startTime": "04:12",
+  "endTime": "08:42",
+  "totalScans": 7,
+  "systemStatus": {
+    "uptimeHours": 40,
+    "dockerContainers": {
+      "frontend": {
+        "name": "openclaw-permissions-frontend",
+        "status": "运行中",
+        "runtime": "16小时"
+      },
+      "backend": {
+        "name": "openclaw-permissions-backend",
+        "status": "运行中",
+        "runtime": "16小时"
+      }
+    },
+    "externalServices": {
+      "management": 200,
+      "apiHealth": 200
+    },
+    "adPlatformProcesses": 0
+  },
+  "issues": {
+    "found": {
+      "high": 0,
+      "medium": 40,
+      "low": 0,
+      "total": 40
+    },
+    "breakdown": {
+      "F401": 39,
+      "F821": 1,
+      "F841": 1,
+      "E501": 1
+    }
+  },
+  "fixes": {
+    "auto": 14,
+    "manual": 0,
+    "fixedThisSession": [
+      {
+        "file": "ad-platform/app/api/async_tasks.py",
+        "issue": "F821 undefined name 'upload_conversion_task'",
+        "time": "04:20",
+        "action": "添加导入"
+      },
+      {
+        "file": "ad-platform/app/api/bidding.py",
+        "issue": "F841 unused variable 'strategy'",
+        "time": "04:20",
+        "action": "移除变量赋值"
+      }
+    ]
+  },
+  "gitCommits": [
+    {
+      "hash": "124ba27",
+      "time": "07:12",
+      "message": "feat: 添加 OpenClaw 权限配置工具集（2026-03-14）",
+      "files": 100,
+      "additions": 15176,
+      "deletions": 161
+    },
+    {
+      "hash": "045b4cc",
+      "time": "08:12",
+      "message": "chore: 更新心跳检查记录（2026-03-14 08:12）",
+      "files": 2,
+      "additions": 74,
+      "deletions": 3
+    }
+  ],
+  "newProjects": [
+    {
+      "name": "openclaw-permission-config",
+      "description": "QQ权限配置可视化工具",
+      "features": [
+        "安全设计：保留管理员最高权限",
+        "配置备份机制",
+        "权限验证和变更日志",
+        "可视化用户权限管理界面"
+      ]
+    },
+    {
+      "name": "openclaw-permission-manager",
+      "description": "权限管理系统",
+      "features": [
+        "用户管理、权限模板管理、配置文件管理",
+        "Web界面（React + TypeScript + Ant Design）",
+        "RESTful API + JWT认证",
+        "Docker支持"
+      ]
+    }
+  ],
+  "notes": [
+    "系统持续稳定运行40小时",
+    "Docker容器运行正常",
+    "所有改动已提交到git",
+    "代码质量：40个待处理问题（低优先级）"
+  ],
+  "nextSteps": [
+    "批量修复39个F401未使用导入",
+    "修复attribution.py行长度问题（E501）",
+    "评估28个过时包的升级计划"
+  ]
+}
