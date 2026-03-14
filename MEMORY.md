@@ -257,6 +257,42 @@ pip install black flake8 mypy pytest pytest-cov safety bandit
 - **2026-03-13 12:15**: 完成第144次系统健康检查，系统持续稳定运行（20小时50分钟），累计自动修复12次
 - **2026-03-13 12:45**: 完成第145次系统健康检查，系统持续稳定运行（21小时20分钟），累计自动修复12次
 - **2026-03-13 13:15**: 完成第146次系统健康检查，系统持续稳定运行（21小时50分钟），累计自动修复12次
+- **2026-03-14**: 成功集成阿里巴巴 page-agent 项目到技能生态，创建技能文档和示例代码
+
+---
+
+## 🆕 新技能：Page Agent（2026-03-14）
+
+### 项目来源
+- **GitHub**: https://github.com/alibaba/page-agent
+- **版本**: 1.5.7
+- **许可证**: MIT
+- **作者**: Alibaba
+
+### 核心能力
+- 网页自动化智能体，用自然语言控制网页界面
+- 无需浏览器扩展、Python 或无头浏览器
+- 纯 JavaScript 集成，基于 DOM 文本操作
+- 支持自定义 LLM（通义千问、OpenAI、Claude 等）
+
+### 使用场景
+- SaaS AI 助手集成
+- 智能表单填写（20步 → 1句话）
+- 无障碍访问（语音命令）
+- 跨页面任务（配合 Chrome 扩展）
+
+### 技能文件
+- `/root/.openclaw/workspace/skills/page-agent/SKILL.md` - 技能文档
+- `/root/.openclaw/workspace/skills/page-agent/README.md` - 技能说明
+- `/root/.openclaw/workspace/skills/page-agent/examples/basic-usage.js` - 基础使用示例
+- `/root/.openclaw/workspace/skills/page-agent/examples/quick-start.html` - 快速开始 HTML
+- `/root/.openclaw/workspace/skills/page-agent/examples/env.example` - 环境变量示例
+- `/root/.openclaw/workspace/skills/page-agent/examples/INSTALL.md` - 安装指南
+
+### 技术要求
+- Node.js: ^20.19.0 || ^22.13.0 || >=24
+- 现代浏览器
+- LLM API Key（通义千问/OpenAI/Claude 等）
 
 ---
 
