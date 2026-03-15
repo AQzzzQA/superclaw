@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # 蓝绿部署 - 蓝色版本（当前版本）
+  dsp-backend-blue:
+    extends:
+      file: docker-compose.yml
+      service: dsp-backend
+    container_name: dsp-backend-blue
+    ports:
+      - "8000:8000"
+    networks:
+      - dsp-blue-network
+
+  dsp-frontend-blue:
+    extends:
+      file: docker-compose.yml
+      service: dsp-frontend
+    container_name: dsp-frontend-blue
+    ports:
+      - "3000:3000"
+    networks:
+      - dsp-blue-network
+
+  # 绿色版本（新版本）
+  dsp-backend-green:
+    extends:
+      file: docker-compose.yml
+      service: dsp-backend
+    container_name: dsp-backend-green
+    ports:
+      - "8001:8000"
+    networks:
+      - dsp-green-network
+
+  dsp-frontend-green:
+    extends:
+      file: docker-compose.yml
+      service: dsp-frontend
+    container_name: dsp-frontend-green
+    ports:
+      - "3001:3000"
+    networks:
+      - dsp-green-network
+
+  # Nginx负载均衡器（流量切换）
+  dsp-nginx-lb:
+    image: nginx:1.24-alpine
+    container_name: dsp-nginx-lb
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d/bluegreen.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
+    networks:
+      - dsp-blue-network
+      - dsp-green-network
+    depends_on:
+      - dsp-backend-blue
+      - dsp-backend-green
+
+networks:
+  dsp-blue-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+
+  dsp-green-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16

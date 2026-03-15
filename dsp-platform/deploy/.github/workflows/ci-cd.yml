@@ -1,0 +1,490 @@
+# GitHub Actions CI/CD工作流
+
+name: DSP Platform CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+  release:
+    types: [created]
+
+env:
+  DOCKER_REGISTRY: ghcr.io
+  DOCKER_IMAGE: dsp-platform
+
+jobs:
+  # ==================== 代码质量检查 ====================
+  lint:
+    name: Lint and Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: |
+          pip install -r requirements.txt
+          pip install flake8 black isort mypy pylint
+
+      - name: Run Black formatter check
+        working-directory: ./backend
+        run: black --check --diff .
+
+      - name: Run isort import check
+        working-directory: ./backend
+        run: isort --check-only --diff .
+
+      - name: Run Flake8 linter
+        working-directory: ./backend
+        run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      - name: Run mypy type checking
+        working-directory: ./backend
+        run: mypy . --ignore-missing-imports
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: ./frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run ESLint
+        working-directory: ./frontend
+        run: npm run lint
+
+      - name: Run Prettier check
+        working-directory: ./frontend
+        run: npm run format:check
+
+  # ==================== 安全扫描 ====================
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Run Snyk security scan
+        uses: snyk/actions/python@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+          command: test
+          working-directory: ./backend
+
+  # ==================== 单元测试 ====================
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: [lint, security]
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: |
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-asyncio pytest-mock
+
+      - name: Run backend tests
+        working-directory: ./backend
+        env:
+          DATABASE_URL: mysql://test_user:test_password@localhost:3306/test_db
+          REDIS_URL: redis://localhost:6379/0
+        run: |
+          pytest tests/ -v --cov=. --cov-report=xml --cov-report=html
+
+      - name: Upload backend coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./backend/coverage.xml
+          flags: backend
+          name: backend-coverage
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: ./frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run frontend tests
+        working-directory: ./frontend
+        run: |
+          npm test -- --coverage --watchAll=false
+
+      - name: Upload frontend coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./frontend/coverage/coverage-final.json
+          flags: frontend
+          name: frontend-coverage
+
+  # ==================== 构建Docker镜像 ====================
+  build:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    needs: test
+    outputs:
+      backend-image: ${{ steps.meta-backend.outputs.tags }}
+      frontend-image: ${{ steps.meta-frontend.outputs.tags }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for backend
+        id: meta-backend
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/backend
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: ${{ steps.meta-backend.outputs.tags }}
+          labels: ${{ steps.meta-backend.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Extract metadata for frontend
+        id: meta-frontend
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/frontend
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          tags: ${{ steps.meta-frontend.outputs.tags }}
+          labels: ${{ steps.meta-frontend.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ==================== 部署到Staging环境 ====================
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+    environment:
+      name: staging
+      url: https://staging.dsp-platform.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to staging server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          script: |
+            cd /opt/dsp-platform
+            git fetch origin
+            git checkout develop
+            git pull origin develop
+
+            # 更新环境变量
+            cp deploy/.env.staging .env
+
+            # 拉取最新镜像
+            docker-compose -f deploy/docker-compose.yml pull
+
+            # 重启服务
+            docker-compose -f deploy/docker-compose.yml up -d
+
+            # 运行数据库迁移
+            docker-compose -f deploy/docker-compose.yml exec -T dsp-backend alembic upgrade head
+
+            # 清理旧镜像
+            docker image prune -af
+
+      - name: Run smoke tests
+        run: |
+          sleep 30
+          curl -f https://staging.dsp-platform.com/health || exit 1
+          curl -f https://staging.dsp-platform.com/api/v1/health || exit 1
+
+      - name: Notify deployment success
+        uses: 8398a7/action-slack@v3
+        if: success()
+        with:
+          status: ${{ job.status }}
+          text: '✅ DSP Platform deployed to staging successfully'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Notify deployment failure
+        uses: 8398a7/action-slack@v3
+        if: failure()
+        with:
+          status: ${{ job.status }}
+          text: '❌ DSP Platform deployment to staging failed'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+  # ==================== 部署到Production环境 ====================
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: production
+      url: https://dsp-platform.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Deploy to production server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.PRODUCTION_HOST }}
+          username: ${{ secrets.PRODUCTION_USER }}
+          key: ${{ secrets.PRODUCTION_SSH_KEY }}
+          script: |
+            cd /opt/dsp-platform
+            git fetch origin
+            git checkout main
+            git pull origin main
+
+            # 备份数据库
+            docker-compose -f deploy/docker-compose.yml exec -T dsp-mysql mysqldump -u root -p${MYSQL_ROOT_PASSWORD} dsp_db > backup_$(date +%Y%m%d_%H%M%S).sql
+
+            # 更新环境变量
+            cp deploy/.env.production .env
+
+            # 拉取最新镜像
+            docker-compose -f deploy/docker-compose.yml pull
+
+            # 蓝绿部署 - 启动新容器
+            docker-compose -f deploy/docker-compose-blue.yml up -d
+
+            # 健康检查
+            sleep 30
+            curl -f http://localhost:8000/health || exit 1
+
+            # 切换流量
+            docker-compose -f deploy/docker-compose.yml down
+            docker-compose -f deploy/docker-compose-blue.yml down
+
+            # 启动新版本
+            docker-compose -f deploy/docker-compose.yml up -d
+
+            # 运行数据库迁移
+            docker-compose -f deploy/docker-compose.yml exec -T dsp-backend alembic upgrade head
+
+            # 清理旧镜像
+            docker image prune -af
+
+            # 备份到远程
+            aws s3 cp backup_*.sql s3://dsp-platform-backups/ --storage-class GLACIER
+
+      - name: Run smoke tests
+        run: |
+          sleep 30
+          curl -f https://dsp-platform.com/health || exit 1
+          curl -f https://dsp-platform.com/api/v1/health || exit 1
+
+      - name: Run integration tests
+        run: |
+          npm test -- --testPathPattern=integration
+
+      - name: Notify deployment success
+        uses: 8398a7/action-slack@v3
+        if: success()
+        with:
+          status: ${{ job.status }}
+          text: '🚀 DSP Platform deployed to production successfully'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Notify deployment failure
+        uses: 8398a7/action-slack@v3
+        if: failure()
+        with:
+          status: ${{ job.status }}
+          text: '💥 DSP Platform deployment to production failed - ROLLING BACK'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Rollback on failure
+        if: failure()
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.PRODUCTION_HOST }}
+          username: ${{ secrets.PRODUCTION_USER }}
+          key: ${{ secrets.PRODUCTION_SSH_KEY }}
+          script: |
+            cd /opt/dsp-platform
+            docker-compose -f deploy/docker-compose-rollback.yml up -d
+
+  # ==================== 性能测试 ====================
+  performance:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    if: github.ref == 'refs/heads/develop'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install k6
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+
+      - name: Run load test
+        run: |
+          k6 run --out json=results.json tests/performance/load-test.js
+
+      - name: Upload performance results
+        uses: actions/upload-artifact@v3
+        with:
+          name: performance-results
+          path: results.json
+
+      - name: Comment PR with performance results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const results = JSON.parse(fs.readFileSync('results.json', 'utf8'));
+            const metrics = results.metrics;
+
+            const comment = `
+            ## 🚀 Performance Test Results
+
+            ### Requests
+            - Total: ${metrics.http_reqs.values.count}
+            - Rate: ${metrics.http_reqs.values.rate} req/s
+
+            ### Response Times
+            - Average: ${metrics.http_req_duration.values.avg} ms
+            - P95: ${metrics.http_req_duration.values['p(95)']} ms
+            - P99: ${metrics.http_req_duration.values['p(99)']} ms
+
+            ### Errors
+            - Failed requests: ${metrics.http_req_failed.values.passes || 0}
+            - Error rate: ${((metrics.http_req_failed.values.rate || 0) * 100).toFixed(2)}%
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

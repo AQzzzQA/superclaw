@@ -1,0 +1,166 @@
+# AlertManager配置文件
+
+global:
+  # SMTP配置
+  smtp_smarthost: '${ALERTMANAGER_SMTP_HOST}:${ALERTMANAGER_SMTP_PORT}'
+  smtp_from: '${ALERTMANAGER_SMTP_FROM}'
+  smtp_auth_username: '${ALERTMANAGER_SMTP_USER}'
+  smtp_auth_password: '${ALERTMANAGER_SMTP_PASSWORD}'
+  smtp_require_tls: true
+
+# 路由配置
+route:
+  receiver: 'default-receiver'
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 12h
+
+  # 子路由配置
+  routes:
+    # 关键告警立即发送
+    - match:
+        severity: critical
+      receiver: 'critical-receiver'
+      continue: true
+
+    # 基础设施告警
+    - match:
+        category: infrastructure
+      receiver: 'infra-receiver'
+
+    # 应用告警
+    - match:
+        category: application
+      receiver: 'app-receiver'
+
+    # 数据库告警
+    - match:
+        category: database
+      receiver: 'db-receiver'
+
+    # 容器告警
+    - match:
+        category: container
+      receiver: 'container-receiver'
+
+    # 业务告警
+    - match:
+        category: business
+      receiver: 'business-receiver'
+
+    # 日志告警
+    - match:
+        category: logging
+      receiver: 'log-receiver'
+
+# 接收器配置
+receivers:
+  # 默认接收器 - 邮件 + 钉钉
+  - name: 'default-receiver'
+    email_configs:
+      - to: '${ALERTMANAGER_SMTP_TO}'
+        headers:
+          Subject: '[DSP-Platform] {{ .GroupLabels.alertname }}'
+    webhook_configs:
+      - url: '${DINGTALK_WEBHOOK}'
+        send_resolved: true
+
+  # 关键接收器 - 邮件 + 钉钉 + 企业微信
+  - name: 'critical-receiver'
+    email_configs:
+      - to: '${ALERTMANAGER_SMTP_TO}'
+        headers:
+          Subject: '[CRITICAL] DSP-Platform Alert: {{ .GroupLabels.alertname }}'
+    webhook_configs:
+      - url: '${DINGTALK_WEBHOOK}'
+        send_resolved: true
+      - url: '${WECHAT_WEBHOOK}'
+        send_resolved: true
+
+  # 基础设施接收器
+  - name: 'infra-receiver'
+    email_configs:
+      - to: '${ALERTMANAGER_SMTP_TO}'
+        headers:
+          Subject: '[Infrastructure] DSP-Platform Alert: {{ .GroupLabels.alertname }}'
+    webhook_configs:
+      - url: '${DINGTALK_WEBHOOK}'
+        send_resolved: true
+
+  # 应用接收器
+  - name: 'app-receiver'
+    email_configs:
+      - to: '${ALERTMANAGER_SMTP_TO}'
+        headers:
+          Subject: '[Application] DSP-Platform Alert: {{ .GroupLabels.alertname }}'
+    webhook_configs:
+      - url: '${DINGTALK_WEBHOOK}'
+        send_resolved: true
+
+  # 数据库接收器
+  - name: 'db-receiver'
+    email_configs:
+      - to: '${ALERTMANAGER_SMTP_TO}'
+        headers:
+          Subject: '[Database] DSP-Platform Alert: {{ .GroupLabels.alertname }}'
+    webhook_configs:
+      - url: '${DINGTALK_WEBHOOK}'
+        send_resolved: true
+
+  # 容器接收器
+  - name: 'container-receiver'
+    email_configs:
+      - to: '${ALERTMANAGER_SMTP_TO}'
+        headers:
+          Subject: '[Container] DSP-Platform Alert: {{ .GroupLabels.alertname }}'
+    webhook_configs:
+      - url: '${DINGTALK_WEBHOOK}'
+        send_resolved: true
+
+  # 业务接收器
+  - name: 'business-receiver'
+    email_configs:
+      - to: '${ALERTMANAGER_SMTP_TO}'
+        headers:
+          Subject: '[Business] DSP-Platform Alert: {{ .GroupLabels.alertname }}'
+    webhook_configs:
+      - url: '${DINGTALK_WEBHOOK}'
+        send_resolved: true
+
+  # 日志接收器
+  - name: 'log-receiver'
+    email_configs:
+      - to: '${ALERTMANAGER_SMTP_TO}'
+        headers:
+          Subject: '[Logging] DSP-Platform Alert: {{ .GroupLabels.alertname }}'
+    webhook_configs:
+      - url: '${DINGTALK_WEBHOOK}'
+        send_resolved: true
+
+# 抑制规则
+inhibit_rules:
+  # 如果服务宕机，抑制该服务的其他告警
+  - source_match:
+      alertname: 'ServiceDown'
+    target_match_re:
+      service: '.+'
+    equal: ['service', 'instance']
+
+  # 如果节点宕机，抑制该节点上的所有告警
+  - source_match:
+      alertname: 'NodeDown'
+    target_match_re:
+      instance: '.+'
+    equal: ['instance']
+
+  # 如果数据库宕机，抑制相关的应用告警
+  - source_match:
+      alertname: 'HighMySQLConnections'
+    target_match:
+      category: 'application'
+    equal: ['cluster']
+
+# 模板配置（可选）
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'

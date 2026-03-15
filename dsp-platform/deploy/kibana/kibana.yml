@@ -1,0 +1,24 @@
+server.name: "dsp-kibana"
+server.host: "0.0.0.0"
+server.port: 5601
+
+# Elasticsearch配置
+elasticsearch.hosts: ["http://dsp-elasticsearch:9200"]
+elasticsearch.username: "kibana_system"
+elasticsearch.password: "${ELASTIC_PASSWORD}"
+
+# 监控配置
+monitoring.ui.container.elasticsearch.enabled: true
+
+# 国际化
+i18n.locale: "zh-CN"
+
+# 日志配置
+logging.silent: false
+logging.verbose: false
+
+# 安全配置
+xpack.security.enabled: true
+xpack.encryptedSavedObjects.encryptionKey: "dsp-platform-encryption-key-at-least-32-characters-long"
+xpack.reporting.encryptionKey: "dsp-platform-reporting-key-at-least-32-characters-long"
+xpack.security.encryptionKey: "dsp-platform-security-key-at-least-32-characters-long"

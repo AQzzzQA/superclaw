@@ -1,0 +1,13 @@
+# Grafana Dashboard配置
+
+apiVersion: 1
+
+providers:
+  - name: 'DSP Platform Dashboards'
+    orgId: 1
+    folder: ''
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /var/lib/grafana/dashboards

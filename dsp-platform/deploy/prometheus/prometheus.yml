@@ -1,0 +1,111 @@
+# Prometheus配置文件
+
+global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'dsp-platform'
+    environment: '${ENVIRONMENT:-development}'
+
+# 告警规则文件
+rule_files:
+  - "/etc/prometheus/alerts.yml"
+  - "/etc/prometheus/rules/*.yml"
+
+# AlertManager配置
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - dsp-alertmanager:9093
+
+# 数据采集配置
+scrape_configs:
+  # Prometheus自身监控
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+
+  # 节点监控
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['dsp-node-exporter:9100']
+        labels:
+          service: 'node-exporter'
+
+  # 容器监控
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['dsp-cadvisor:8080']
+        labels:
+          service: 'cadvisor'
+
+  # Nginx监控（需安装nginx-prometheus-exporter）
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['dsp-nginx:9113']
+        labels:
+          service: 'nginx'
+
+  # MySQL监控（需安装mysqld-exporter）
+  - job_name: 'mysql'
+    static_configs:
+      - targets: ['dsp-mysql-exporter:9104']
+        labels:
+          service: 'mysql'
+
+  # Redis监控（需安装redis-exporter）
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['dsp-redis-exporter:9121']
+        labels:
+          service: 'redis'
+
+  # DSP后端应用监控
+  - job_name: 'dsp-backend'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['dsp-backend:8000']
+        labels:
+          service: 'dsp-backend'
+          app: 'dsp-platform'
+
+  # DSP前端应用监控
+  - job_name: 'dsp-frontend'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['dsp-frontend:3000']
+        labels:
+          service: 'dsp-frontend'
+          app: 'dsp-platform'
+
+  # Elasticsearch监控
+  - job_name: 'elasticsearch'
+    static_configs:
+      - targets: ['dsp-elasticsearch:9200']
+        labels:
+          service: 'elasticsearch'
+
+  # Logstash监控
+  - job_name: 'logstash'
+    static_configs:
+      - targets: ['dsp-logstash:9600']
+        labels:
+          service: 'logstash'
+
+  # AlertManager监控
+  - job_name: 'alertmanager'
+    static_configs:
+      - targets: ['dsp-alertmanager:9093']
+        labels:
+          service: 'alertmanager'
+
+  # Grafana监控
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['dsp-grafana:3000']
+        labels:
+          service: 'grafana'

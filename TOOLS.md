@@ -38,3 +38,10 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
 ---
 
 Add whatever helps you do your job. This is your cheat sheet.
+
+---
+
+## 部署规范
+
+### 端口分配
+- **运维智能体**: 8000-9000（下次部署预留）

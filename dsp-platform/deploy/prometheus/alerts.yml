@@ -1,0 +1,276 @@
+# Prometheus告警规则
+
+groups:
+  - name: infrastructure_alerts
+    interval: 30s
+    rules:
+      # CPU使用率告警
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+          category: infrastructure
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage is {{ $value }}% on {{ $labels.instance }}"
+
+      # 内存使用率告警
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          category: infrastructure
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is {{ $value }}% on {{ $labels.instance }}"
+
+      # 磁盘使用率告警
+      - alert: HighDiskUsage
+        expr: (1 - (node_filesystem_avail_bytes{fstype!="tmpfs"} / node_filesystem_size_bytes{fstype!="tmpfs"})) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          category: infrastructure
+        annotations:
+          summary: "High disk usage on {{ $labels.instance }}"
+          description: "Disk usage is {{ $value }}% on {{ $labels.device }}"
+
+      # 磁盘IO告警
+      - alert: HighDiskIO
+        expr: rate(node_disk_io_time_seconds_total[5m]) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          category: infrastructure
+        annotations:
+          summary: "High disk I/O on {{ $labels.instance }}"
+          description: "Disk I/O is {{ $value }}% on {{ $labels.device }}"
+
+  - name: application_alerts
+    interval: 30s
+    rules:
+      # 服务健康检查告警
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+          category: application
+        annotations:
+          summary: "Service {{ $labels.job }} is down"
+          description: "Service {{ $labels.job }} on {{ $labels.instance }} has been down for more than 1 minute"
+
+      # HTTP错误率告警
+      - alert: HighHTTPErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          category: application
+        annotations:
+          summary: "High HTTP error rate on {{ $labels.job }}"
+          description: "HTTP 5xx error rate is {{ $value }} for {{ $labels.job }}"
+
+      # HTTP响应时间告警
+      - alert: HighHTTPResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+          category: application
+        annotations:
+          summary: "High HTTP response time on {{ $labels.job }}"
+          description: "P95 response time is {{ $value }}s for {{ $labels.job }}"
+
+  - name: database_alerts
+    interval: 30s
+    rules:
+      # MySQL连接数告警
+      - alert: HighMySQLConnections
+        expr: (mysql_global_status_threads_connected / mysql_global_variables_max_connections) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: "High MySQL connection usage"
+          description: "MySQL connection usage is {{ $value }}%"
+
+      # MySQL慢查询告警
+      - alert: HighMySQLSlowQueries
+        expr: rate(mysql_global_status_slow_queries[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: "High MySQL slow queries"
+          description: "MySQL slow query rate is {{ $value }}/s"
+
+      # Redis连接数告警
+      - alert: HighRedisConnections
+        expr: (redis_connected_clients / redis_config_maxclients) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: "High Redis connection usage"
+          description: "Redis connection usage is {{ $value }}%"
+
+      # Redis内存使用告警
+      - alert: HighRedisMemoryUsage
+        expr: (redis_memory_used_bytes / redis_memory_max_bytes) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          category: database
+        annotations:
+          summary: "High Redis memory usage"
+          description: "Redis memory usage is {{ $value }}%"
+
+  - name: container_alerts
+    interval: 30s
+    rules:
+      # 容器CPU使用率告警
+      - alert: HighContainerCPUUsage
+        expr: rate(container_cpu_usage_seconds_total{name!=""}[5m]) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          category: container
+        annotations:
+          summary: "High CPU usage for container {{ $labels.name }}"
+          description: "Container CPU usage is {{ $value }}%"
+
+      # 容器内存使用率告警
+      - alert: HighContainerMemoryUsage
+        expr: (container_memory_usage_bytes{name!=""} / container_spec_memory_limit_bytes{name!=""}) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          category: container
+        annotations:
+          summary: "High memory usage for container {{ $labels.name }}"
+          description: "Container memory usage is {{ $value }}%"
+
+      # 容器重启告警
+      - alert: ContainerRestarts
+        expr: increase(container_restart_count{name!=""}[1h]) > 5
+        for: 5m
+        labels:
+          severity: warning
+          category: container
+        annotations:
+          summary: "Container {{ $labels.name }} restarting frequently"
+          description: "Container has restarted {{ $value }} times in the last hour"
+
+  - name: business_alerts
+    interval: 30s
+    rules:
+      # 请求量异常下降告警
+      - alert: LowRequestRate
+        expr: rate(http_requests_total[5m]) < 10
+        for: 10m
+        labels:
+          severity: info
+          category: business
+        annotations:
+          summary: "Low request rate for {{ $labels.job }}"
+          description: "Request rate dropped to {{ $value }}/s"
+
+      # API错误率告警
+      - alert: HighAPIErrorRate
+        expr: rate(dsp_api_errors_total[5m]) / rate(dsp_api_requests_total[5m]) > 0.01
+        for: 5m
+        labels:
+          severity: warning
+          category: business
+        annotations:
+          summary: "High API error rate"
+          description: "API error rate is {{ $value }}%"
+
+      # 广告投放异常告警
+      - alert: AdDeliveryFailure
+        expr: rate(dsp_ad_delivery_failures_total[5m]) > 100
+        for: 5m
+        labels:
+          severity: critical
+          category: business
+        annotations:
+          summary: "High ad delivery failure rate"
+          description: "Ad delivery failure rate is {{ $value }}/s"
+
+      # 预算消耗告警
+      - alert: BudgetConsumptionWarning
+        expr: dsp_budget_consumed / dsp_budget_total > 0.8
+        for: 5m
+        labels:
+          severity: warning
+          category: business
+        annotations:
+          summary: "Budget consumption warning"
+          description: "Campaign has consumed {{ $value }}% of budget"
+
+      # 结算失败告警
+      - alert: SettlementFailure
+        expr: rate(dsp_settlement_failures_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: critical
+          category: business
+        annotations:
+          summary: "High settlement failure rate"
+          description: "Settlement failure rate is {{ $value }}/s"
+
+  - name: elasticsearch_alerts
+    interval: 30s
+    rules:
+      # Elasticsearch集群健康告警
+      - alert: ElasticsearchClusterNotHealthy
+        expr: elasticsearch_cluster_health_status{color!="green"} == 1
+        for: 5m
+        labels:
+          severity: warning
+          category: elasticsearch
+        annotations:
+          summary: "Elasticsearch cluster not healthy"
+          description: "Cluster health is {{ $labels.color }}"
+
+      # Elasticsearch JVM堆使用率告警
+      - alert: HighElasticsearchJVMHeap
+        expr: (elasticsearch_jvm_memory_used_bytes{area="heap"} / elasticsearch_jvm_memory_max_bytes{area="heap"}) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          category: elasticsearch
+        annotations:
+          summary: "High Elasticsearch JVM heap usage"
+          description: "JVM heap usage is {{ $value }}%"
+
+  - name: log_alerts
+    interval: 30s
+    rules:
+      # 错误日志告警
+      - alert: HighErrorLogRate
+        expr: rate(log_messages_total{level="error"}[5m]) > 50
+        for: 5m
+        labels:
+          severity: warning
+          category: logging
+        annotations:
+          summary: "High error log rate"
+          description: "Error log rate is {{ $value }}/s"
+
+      # 警告日志告警
+      - alert: HighWarningLogRate
+        expr: rate(log_messages_total{level="warning"}[5m]) > 100
+        for: 10m
+        labels:
+          severity: info
+          category: logging
+        annotations:
+          summary: "High warning log rate"
+          description: "Warning log rate is {{ $value }}/s"
