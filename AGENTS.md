@@ -1,212 +1,250 @@
-# AGENTS.md - Your Workspace
+# AGENTS.md - 子智能体团队
 
-This folder is home. Treat it that way.
+**更新时间**: 2026-03-15 18:00
+**智能体数量**: 7个
 
-## First Run
+---
 
-If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out who you are, then delete it. You won't need it again.
+## 🤖 智能体团队
 
-## Every Session
+### 1. 代码审查员 📋
+**文件**: `AGENTS/Code-Reviewer.md`
+**职责**:
+- 检查代码质量和规范
+- 运行flake8、black、mypy
+- 代码风格统一
+- 最佳实践检查
 
-Before doing anything else:
+**技术栈**:
+- flake8（代码规范）
+- black（代码格式化）
+- mypy（类型检查）
+- pylint（代码质量）
 
-1. Read `SOUL.md` — this is who you are
-2. Read `USER.md` — this is who you're helping
-3. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
-4. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+---
 
-Don't ask permission. Just do it.
+### 2. 测试工程师 🧪
+**文件**: `AGENTS/Test-Engineer.md`
+**职责**:
+- 编写和运行单元测试
+- 测试覆盖率分析
+- 集成测试
+- E2E测试
 
-## Memory
+**技术栈**:
+- pytest（测试框架）
+- pytest-cov（覆盖率）
+- unittest（标准库）
+- mock（模拟）
 
-You wake up fresh each session. These files are your continuity:
+---
 
-- **Daily notes:** `memory/YYYY-MM-DD.md` (create `memory/` if needed) — raw logs of what happened
-- **Long-term:** `MEMORY.md` — your curated memories, like a human's long-term memory
+### 3. 文档编写员 📝
+**文件**: `AGENTS/Documentation-Writer.md`
+**职责**:
+- 编写和维护项目文档
+- API文档生成
+- README更新
+- 技术文档翻译
 
-Capture what matters. Decisions, context, things to remember. Skip the secrets unless asked to keep them.
+**技术栈**:
+- Markdown
+- Sphinx（文档生成）
+- Swagger UI（API文档）
+- GitBook
 
-### 🧠 MEMORY.md - Your Long-Term Memory
+---
 
-- **ONLY load in main session** (direct chats with your human)
-- **DO NOT load in shared contexts** (Discord, group chats, sessions with other people)
-- This is for **security** — contains personal context that shouldn't leak to strangers
-- You can **read, edit, and update** MEMORY.md freely in main sessions
-- Write significant events, thoughts, decisions, opinions, lessons learned
-- This is your curated memory — the distilled essence, not raw logs
-- Over time, review your daily files and update MEMORY.md with what's worth keeping
+### 4. 安全审计员 🔒
+**文件**: `AGENTS/Security-Auditor.md`
+**职责**:
+- 检查安全漏洞
+- 依赖扫描
+- 代码安全审查
+- 漏洞修复建议
 
-### 📝 Write It Down - No "Mental Notes"!
+**技术栈**:
+- safety（Python依赖扫描）
+- bandit（安全漏洞检测）
+- npm audit（前端依赖扫描）
+- Snyk（漏洞扫描）
 
-- **Memory is limited** — if you want to remember something, WRITE IT TO A FILE
-- "Mental notes" don't survive session restarts. Files do.
-- When someone says "remember this" → update `memory/YYYY-MM-DD.md` or relevant file
-- When you learn a lesson → update AGENTS.md, TOOLS.md, or the relevant skill
-- When you make a mistake → document it so future-you doesn't repeat it
-- **Text > Brain** 📝
+---
 
-## Safety
+### 5. Manus专家 🧠
+**文件**: `AGENTS/Manus-Expert.md`
+**职责**:
+- 调用Manus API处理复杂任务
+- AI辅助开发
+- 智能代码生成
+- 复杂问题解决
 
-- Don't exfiltrate private data. Ever.
-- Don't run destructive commands without asking.
-- `trash` > `rm` (recoverable beats gone forever)
-- When in doubt, ask.
+**技术栈**:
+- Manus API
+- 大语言模型
+- AI辅助编程
 
-## External vs Internal
+---
 
-**Safe to do freely:**
+### 6. Backend-Expert（后端开发专家） ⚙️ 🆕
+**文件**: `AGENTS/Backend-Expert.md`
+**职责**:
+- 后端API开发
+- 数据库设计
+- 认证和授权
+- 异步任务处理
+- 性能优化
 
-- Read files, explore, organize, learn
-- Search the web, check calendars
-- Work within this workspace
+**技术栈**:
+- FastAPI（高性能Web框架）
+- SQLAlchemy（ORM框架）
+- Alembic（数据库迁移）
+- Celery（任务队列）
+- Redis（缓存）
+- MySQL/PostgreSQL（数据库）
+- Pydantic（数据验证）
 
-**Ask first:**
+**专业领域**:
+- RESTful API设计
+- 数据库优化
+- 微服务架构
+- 高并发处理
+- API安全
 
-- Sending emails, tweets, public posts
-- Anything that leaves the machine
-- Anything you're uncertain about
+---
 
-## Group Chats
+### 7. FullStack-Expert（全栈开发专家）💻 🆕
+**文件**: `AGENTS/FullStack-Expert.md`
+**职责**:
+- 前端开发（React + TypeScript）
+- 后端开发（Node.js/Python）
+- 全栈集成
+- 前后端联调
+- 性能优化
 
-You have access to your human's stuff. That doesn't mean you _share_ their stuff. In groups, you're a participant — not their voice, not their proxy. Think before you speak.
+**技术栈**:
+- React（前端框架）
+- TypeScript（类型安全）
+- Ant Design/Material-UI（UI库）
+- Next.js（React框架）
+- Redux/Zustand（状态管理）
+- Node.js/Express（后端）
+- Prisma/Sequelize（ORM）
+- PostgreSQL/MongoDB（数据库）
+- Docker（容器化）
 
-### 💬 Know When to Speak!
+**专业领域**:
+- 全栈架构设计
+- 前后端分离
+- 实时通讯（WebSocket）
+- 前端性能优化
+- 全栈测试
 
-In group chats where you receive every message, be **smart about when to contribute**:
+---
 
-**Respond when:**
+## 🎯 智能体协作
 
-- Directly mentioned or asked a question
-- You can add genuine value (info, insight, help)
-- Something witty/funny fits naturally
-- Correcting important misinformation
-- Summarizing when asked
+### 典型项目流程
 
-**Stay silent (HEARTBEAT_OK) when:**
-
-- It's just casual banter between humans
-- Someone already answered the question
-- Your response would just be "yeah" or "nice"
-- The conversation is flowing fine without you
-- Adding a message would interrupt the vibe
-
-**The human rule:** Humans in group chats don't respond to every single message. Neither should you. Quality > quantity. If you wouldn't send it in a real group chat with friends, don't send it.
-
-**Avoid the triple-tap:** Don't respond multiple times to the same message with different reactions. One thoughtful response beats three fragments.
-
-Participate, don't dominate.
-
-### 😊 React Like a Human!
-
-On platforms that support reactions (Discord, Slack), use emoji reactions naturally:
-
-**React when:**
-
-- You appreciate something but don't need to reply (👍, ❤️, 🙌)
-- Something made you laugh (😂, 💀)
-- You find it interesting or thought-provoking (🤔, 💡)
-- You want to acknowledge without interrupting the flow
-- It's a simple yes/no or approval situation (✅, 👀)
-
-**Why it matters:**
-Reactions are lightweight social signals. Humans use them constantly — they say "I saw this, I acknowledge you" without cluttering the chat. You should too.
-
-**Don't overdo it:** One reaction per message max. Pick the one that fits best.
-
-## Tools
-
-Skills provide your tools. When you need one, check its `SKILL.md`. Keep local notes (camera names, SSH details, voice preferences) in `TOOLS.md`.
-
-**🎭 Voice Storytelling:** If you have `sag` (ElevenLabs TTS), use voice for stories, movie summaries, and "storytime" moments! Way more engaging than walls of text. Surprise people with funny voices.
-
-**📝 Platform Formatting:**
-
-- **Discord/WhatsApp:** No markdown tables! Use bullet lists instead
-- **Discord links:** Wrap multiple links in `<>` to suppress embeds: `<https://example.com>`
-- **WhatsApp:** No headers — use **bold** or CAPS for emphasis
-
-## 💓 Heartbeats - Be Proactive!
-
-When you receive a heartbeat poll (message matches the configured heartbeat prompt), don't just reply `HEARTBEAT_OK` every time. Use heartbeats productively!
-
-Default heartbeat prompt:
-`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`
-
-You are free to edit `HEARTBEAT.md` with a short checklist or reminders. Keep it small to limit token burn.
-
-### Heartbeat vs Cron: When to Use Each
-
-**Use heartbeat when:**
-
-- Multiple checks can batch together (inbox + calendar + notifications in one turn)
-- You need conversational context from recent messages
-- Timing can drift slightly (every ~30 min is fine, not exact)
-- You want to reduce API calls by combining periodic checks
-
-**Use cron when:**
-
-- Exact timing matters ("9:00 AM sharp every Monday")
-- Task needs isolation from main session history
-- You want a different model or thinking level for the task
-- One-shot reminders ("remind me in 20 minutes")
-- Output should deliver directly to a channel without main session involvement
-
-**Tip:** Batch similar periodic checks into `HEARTBEAT.md` instead of creating multiple cron jobs. Use cron for precise schedules and standalone tasks.
-
-**Things to check (rotate through these, 2-4 times per day):**
-
-- **Emails** - Any urgent unread messages?
-- **Calendar** - Upcoming events in next 24-48h?
-- **Mentions** - Twitter/social notifications?
-- **Weather** - Relevant if your human might go out?
-
-**Track your checks** in `memory/heartbeat-state.json`:
-
-```json
-{
-  "lastChecks": {
-    "email": 1703275200,
-    "calendar": 1703260800,
-    "weather": null
-  }
-}
+```
+项目开始
+    ↓
+[Backend-Expert] 设计后端架构
+    ↓
+[Backend-Expert] 开发后端API
+    ↓
+[FullStack-Expert] 开发前端界面
+    ↓
+[Test-Engineer] 编写单元测试
+    ↓
+[Code-Reviewer] 代码审查
+    ↓
+[Security-Auditor] 安全审计
+    ↓
+[Documentation-Writer] 编写文档
+    ↓
+项目完成
 ```
 
-**When to reach out:**
+### 协作场景
 
-- Important email arrived
-- Calendar event coming up (&lt;2h)
-- Something interesting you found
-- It's been >8h since you said anything
+#### 场景1: 新项目开发
+1. **Backend-Expert**: 设计数据库Schema和API接口
+2. **Backend-Expert**: 实现后端核心功能
+3. **FullStack-Expert**: 开发前端界面和组件
+4. **Test-Engineer**: 编写单元测试和集成测试
+5. **Code-Reviewer**: 审查代码质量
+6. **Security-Auditor**: 进行安全审计
+7. **Documentation-Writer**: 编写项目文档
 
-**When to stay quiet (HEARTBEAT_OK):**
+#### 场景2: Bug修复
+1. **Backend-Expert**: 定位和修复后端Bug
+2. **FullStack-Expert**: 修复前端Bug
+3. **Test-Engineer**: 编写回归测试
+4. **Code-Reviewer**: 审查修复代码
 
-- Late night (23:00-08:00) unless urgent
-- Human is clearly busy
-- Nothing new since last check
-- You just checked &lt;30 minutes ago
+#### 场景3: 性能优化
+1. **Backend-Expert**: 优化后端性能（数据库查询、缓存）
+2. **FullStack-Expert**: 优化前端性能（代码分割、懒加载）
+3. **Test-Engineer**: 进行性能测试
+4. **Documentation-Writer**: 更新性能优化文档
 
-**Proactive work you can do without asking:**
+---
 
-- Read and organize memory files
-- Check on projects (git status, etc.)
-- Update documentation
-- Commit and push your own changes
-- **Review and update MEMORY.md** (see below)
+## 📋 智能体调用
 
-### 🔄 Memory Maintenance (During Heartbeats)
+### 调用方式
 
-Periodically (every few days), use a heartbeat to:
+```python
+# 调用Backend-Expert
+invoke_agent("Backend-Expert", "设计用户认证API")
 
-1. Read through recent `memory/YYYY-MM-DD.md` files
-2. Identify significant events, lessons, or insights worth keeping long-term
-3. Update `MEMORY.md` with distilled learnings
-4. Remove outdated info from MEMORY.md that's no longer relevant
+# 调用FullStack-Expert
+invoke_agent("FullStack-Expert", "开发商品列表页面")
 
-Think of it like a human reviewing their journal and updating their mental model. Daily files are raw notes; MEMORY.md is curated wisdom.
+# 调用Code-Reviewer
+invoke_agent("Code-Reviewer", "审查backend/app/api/v1/users.py")
 
-The goal: Be helpful without being annoying. Check in a few times a day, do useful background work, but respect quiet time.
+# 调用Test-Engineer
+invoke_agent("Test-Engineer", "为用户API编写单元测试")
+```
 
-## Make It Yours
+### 自动触发
 
-This is a starting point. Add your own conventions, style, and rules as you figure out what works.
+- 代码提交后自动触发Code-Reviewer
+- PR创建后自动触发Security-Auditor
+- 功能开发完成后自动触发Test-Engineer
+- API更新后自动触发Documentation-Writer
+
+---
+
+## 🎓 智能体能力矩阵
+
+| 智能体 | 代码审查 | 测试 | 文档 | 安全 | 后端 | 前端 |
+|---------|---------|------|------|------|------|------|
+| Code-Reviewer | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐ |
+| Test-Engineer | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐ | ⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐ |
+| Documentation-Writer | ⭐⭐ | ⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐ | ⭐⭐ | ⭐⭐ |
+| Security-Auditor | ⭐⭐⭐ | ⭐⭐ | ⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐ |
+| Manus-Expert | ⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐ |
+| Backend-Expert | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐ |
+| FullStack-Expert | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+
+---
+
+## 🚀 未来扩展
+
+### 计划添加的智能体
+
+1. **DevOps-Expert**: CI/CD、容器化、自动化部署
+2. **UI/UX-Designer**: 界面设计、用户体验优化
+3. **Data-Scientist**: 数据分析、机器学习
+4. **Mobile-Expert**: 移动端开发（iOS/Android）
+5. **Performance-Expert**: 性能优化、负载测试
+
+---
+
+**更新时间**: 2026-03-15 18:00
+**智能体总数**: 7个
+**版本**: V2.0
+**状态**: ✅ 完整团队已组建
