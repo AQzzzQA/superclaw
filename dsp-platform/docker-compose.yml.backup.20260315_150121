@@ -10,7 +10,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD:-root}
       MYSQL_DATABASE: ${DATABASE_NAME:-dsp_platform}
     ports:
-      - "0.0.0.0:3308:3306"
+      - "3308:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./infrastructure/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -29,7 +29,7 @@ services:
     container_name: dsp-redis
     restart: unless-stopped
     ports:
-      - "0.0.0.0:6381:6379"
+      - "6381:6379"
     volumes:
       - redis_data:/data
       - ./infrastructure/redis/redis.conf:/usr/local/etc/redis/redis.conf
@@ -51,7 +51,7 @@ services:
     env_file:
       - .env
     ports:
-      - "0.0.0.0:8000:8000"
+      - "8000:8000"
     volumes:
       - ./backend:/app
       - uploads:/app/uploads
@@ -131,7 +131,7 @@ services:
       - CELERY_BROKER_URL=redis://redis:6379/1
       - CELERY_RESULT_BACKEND=redis://redis:6379/2
     ports:
-      - "0.0.0.0:5555:5555"
+      - "5555:5555"
     depends_on:
       redis:
         condition: service_healthy
@@ -164,7 +164,7 @@ services:
     container_name: dsp-prometheus
     restart: unless-stopped
     ports:
-      - "0.0.0.0:9090:9090"
+      - "9090:9090"
     volumes:
       - ./infrastructure/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
@@ -180,7 +180,7 @@ services:
     container_name: dsp-grafana
     restart: unless-stopped
     ports:
-      - "0.0.0.0:3002:3000"
+      - "3002:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
