@@ -1,0 +1,220 @@
+# HEARTBEAT.md - 智能体自我增强任务（DSP Platform适配）
+
+**增强模式**: Echo/Elon 风格的 Agentic Engineering
+**目标**: 持续发现问题 → 自动修复 → 提交优化
+
+---
+
+## 🔄 每日检查任务（按优先级执行）
+
+### 阶段1: 代码健康检查（优先）
+每次心跳时，检查以下项（每日2-4次，轮流执行）：
+
+1. **代码规范检查**
+   - 运行 `flake8 dsp-platform/backend/app/`（检查 Python 代码）
+   - 运行 `black --check dsp-platform/backend/app/`（检查代码格式）
+   - 记录问题到 `TODO.md`
+
+2. **测试覆盖率检查**
+   - 运行 `pytest --cov=app --cov-report=term-missing`（在 backend 目录）
+   - 检查覆盖率是否 < 80%
+   - 记录未覆盖的模块
+
+3. **TODO/FIXME 扫描**
+   - 扫描所有 .py 文件中的 TODO/FIXME 标记
+   - 统计数量并分类
+   - 记录到 `TODO.md`
+
+4. **未提交改动检查**
+   - 运行 `git status`
+   - 检查是否有未提交的改动
+   - 评估是否需要提交或清理
+
+---
+
+### 阶段2: 依赖管理（每2天）
+
+1. **Python 依赖检查**
+   - 运行 `pip list --outdated`（在 backend 目录）
+   - 记录过时的包
+   - 检查是否有安全漏洞（运行 `safety check`）
+
+2. **前端依赖检查**
+   - 如果有前端，运行 `npm outdated`
+   - 记录过时的包
+   - 检查安全漏洞（运行 `npm audit`）
+
+---
+
+### 阶段3: 文档完整性（每3天）
+
+1. **README 检查**
+   - 检查 `dsp-platform/README.md` 是否与当前功能同步
+   - 检查是否有缺失的文档章节
+
+2. **API 文档检查**
+   - 检查 `docs/` 目录中的文档是否更新
+   - 检查是否有新 API 需要文档
+
+3. **变更日志检查**
+   - 检查是否有 `CHANGELOG.md`
+   - 检查近期变更是否记录
+
+---
+
+### 阶段4: 性能监控（每2天）
+
+1. **Docker服务检查**
+   - 运行 `docker ps --filter "name=dsp-"`
+   - 检查所有DSP服务状态
+   - 记录重启的服务
+
+2. **日志分析**
+   - 检查 `logs/` 目录中的日志文件
+   - 查找 ERROR、WARNING 级别的日志
+   - 统计异常模式
+
+3. **数据库性能**
+   - 检查是否有慢查询（通过日志）
+   - 检查数据库连接数
+
+4. **API 响应时间**
+   - 通过日志检查 API 响应时间
+   - 记录慢响应（> 1s）
+
+---
+
+### 阶段5: 安全审计（每3天）
+
+1. **敏感信息扫描**
+   - 扫描代码中的硬编码密钥、密码
+   - 检查 `.env.example` 是否完善
+
+2. **依赖漏洞扫描**
+   - 运行 `safety check`
+   - 运行 `npm audit`（如果有前端）
+   - 记录需要更新的包
+
+3. **权限配置检查**
+   - 检查 RBAC 权限是否合理
+   - 检查敏感 API 是否有认证
+
+4. **端口安全检查**
+   - 检查暴露到外网的端口
+   - 验证MySQL和Redis是否仅绑定到127.0.0.1
+   - 检查防火墙规则
+
+---
+
+## 🚀 自动修复任务
+
+当发现问题时，自动执行以下修复（低风险操作）：
+
+### 可自动修复
+- [ ] 代码格式化（运行 `black dsp-platform/backend/app/`）
+- [ ] 补充缺失的注释
+- [ ] 更新过期的文档链接
+- [ ] 修复简单的 lint 错误
+
+### 需要人工确认
+- [ ] 依赖库升级（可能引入不兼容）
+- [ ] 重构代码（可能影响功能）
+- [ ] 修复安全漏洞（需要测试验证）
+- [ ] 性能优化（需要基准测试）
+- [ ] Docker服务重启
+
+---
+
+## 📊 状态跟踪
+
+在 `memory/heartbeat-state.json` 中记录每次检查的状态：
+
+```json
+{
+  "lastChecks": {
+    "code_health": 1703275200,
+    "dependencies": 1703260800,
+    "docs": null,
+    "performance": 1703257200,
+    "security": null
+  },
+  "issuesFound": {
+    "high": 0,
+    "medium": 3,
+    "low": 7
+  },
+  "issuesFixed": {
+    "auto": 12,
+    "manual": 5
+  },
+  "dspServices": {
+    "backend": "healthy",
+    "mysql": "healthy",
+    "redis": "healthy",
+    "nginx": "running",
+    "prometheus": "running",
+    "grafana": "running",
+    "celeryWorker": "restarting",
+    "celeryBeat": "restarting",
+    "flower": "restarting"
+  }
+}
+```
+
+---
+
+## 🎯 行动准则
+
+### 发现问题时
+1. 评估问题严重程度（高/中/低）
+2. 记录到 `TODO.md`
+3. 如果是低风险问题，自动修复
+4. 如果是高风险问题，报告给用户
+5. 更新 `heartbeat-state.json`
+
+### 自动修复时
+1. 确保在测试环境验证
+2. 运行相关测试
+3. 检查是否通过
+4. 如果失败，回滚改动
+5. 如果通过，提交到 git
+
+### 汇报时
+- 每日汇报重要发现
+- 每周汇总问题统计
+- 每月总结优化成果
+
+---
+
+## 💡 学习与优化
+
+每次检查后，思考：
+- 这个问题为什么会发生？
+- 如何防止它再次发生？
+- 是否需要更新开发规范？
+- 是否需要添加自动化测试？
+
+将经验记录到 `MEMORY.md`，持续优化自己。
+
+---
+
+## 📋 DSP Platform 特定检查
+
+### 每次心跳必须检查
+1. **Docker服务状态**
+   - 运行 `docker ps --filter "name=dsp-"`
+   - 检查所有服务是否运行中
+   - 记录重启的服务
+
+2. **端口监听状态**
+   - 检查关键端口是否监听（8000, 8080, 8888, 8889, 9000）
+   - 验证MySQL/Redis是否仅绑定到127.0.0.1
+
+3. **健康检查**
+   - 检查 `http://localhost:8000/api/v1/system/health`
+   - 验证服务健康状态
+
+### 已知问题跟踪
+- ⚠️ Celery服务持续重启（exit code 2）- 模块路径错误
+- ⚠️ Prometheus端口9000需要云服务器安全组开放
+- ✅ Grafana端口已修复为8888
