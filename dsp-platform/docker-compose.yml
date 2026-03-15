@@ -180,7 +180,7 @@ services:
     container_name: dsp-grafana
     restart: unless-stopped
     ports:
-      - "0.0.0.0:3002:3000"
+      - "0.0.0.0:8888:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
