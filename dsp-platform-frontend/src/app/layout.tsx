@@ -3,6 +3,7 @@ import { ConfigProvider, App as AntdApp } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { Inter } from "next/font/google";
 import "./globals.css";
+import AppLayout from "@/components/Layout/AppLayout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <ConfigProvider locale={zhCN}>
           <AntdApp>
-            {children}
+            <AppLayout>
+              {children}
+            </AppLayout>
           </AntdApp>
         </ConfigProvider>
       </body>
