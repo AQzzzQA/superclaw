@@ -62,7 +62,7 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/api/v1/system/health', timeout=5)"]
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/api/v1/system/health\", timeout=5).read()'"]
       timeout: 10s
       retries: 5
     networks:
@@ -76,10 +76,15 @@ services:
     container_name: dsp-celery-worker
     restart: unless-stopped
     command: celery -A app.tasks.worker worker --loglevel=info --concurrency=4
+    env_file:
+      - .env
     environment:
       - DATABASE_HOST=mysql
       - REDIS_HOST=redis
+      - REDIS_PASSWORD=RedisSecurePassword2026
       - ENVIRONMENT=production
+      - CELERY_BROKER_URL=redis://:RedisSecurePassword2026@redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://:RedisSecurePassword2026@redis:6379/2
     volumes:
       - ./backend:/app
       - uploads:/app/uploads
@@ -101,7 +106,9 @@ services:
       dockerfile: Dockerfile
     container_name: dsp-celery-beat
     restart: unless-stopped
-    command: celery -A app.tasks.worker beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    command: celery -A app.tasks.worker beat --loglevel=info
+    env_file:
+      - .env
     environment:
       - DATABASE_HOST=mysql
       - REDIS_HOST=redis
@@ -127,11 +134,16 @@ services:
     container_name: dsp-flower
     restart: unless-stopped
     command: celery -A app.tasks.worker flower --port=5555
+    env_file:
+      - .env
     environment:
-      - CELERY_BROKER_URL=redis://redis:6379/1
-      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+      - PYTHONPATH=/app
+      - CELERY_BROKER_URL=redis://:RedisSecurePassword2026@redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://:RedisSecurePassword2026@redis:6379/2
     ports:
       - "0.0.0.0:5555:5555"
+    volumes:
+      - ./backend:/app
     depends_on:
       redis:
         condition: service_healthy

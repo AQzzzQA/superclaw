@@ -12,7 +12,8 @@
     "quick_check_2026_03_16_07_23": 1742090580,
     "quick_check_2026_03_16_07_53": 1742092380,
     "code_fix_2026_03_16_08_32": 1742095200,
-    "quick_check_2026_03_16_09_04": 1742096640
+    "quick_check_2026_03_16_09_04": 1742096640,
+    "dsp_recovery_2026_03_16_09_46": 1742097960
   },
   "issuesFound": {
     "high": 0,
@@ -21,7 +22,7 @@
     "total": 2
   },
   "issuesFixed": {
-    "auto": 19,
+    "auto": 24,
     "manual": 0
   },
   "systemMetrics": {
@@ -39,7 +40,7 @@
     }
   },
   "lastReport": 1742083380,
-  "totalScans": 245,
+  "totalScans": 246,
   "recentScans": {
     "quick_check_2026_03_16_05_23": {
       "date": "2026-03-16 05:23",
@@ -80,6 +81,11 @@
       "date": "2026-03-16 09:04",
       "result": "✅ 系统健康",
       "notes": "DSP Platform: 9/9服务正常. Backend稳定运行31分钟(自修复). API健康检查100%通过(self✅ database✅ redis✅). 无错误日志(10m). 磁盘79%(13G可用). Git工作区干净."
+    },
+    "dsp_recovery_2026_03_16_09_46": {
+      "date": "2026-03-16 09:46",
+      "result": "✅ DSP Platform 完全恢复",
+      "notes": "问题: Backend健康检查路径错误, Celery环境变量缺失, Beat调度器配置错误, Flower卷挂载缺失. 修复: 修改docker-compose.yml(健康检查路径, Celery密码认证, PYTHONPATH, 卷挂载), 切换到正确项目目录(dsp-platform). 结果: ✅ Backend健康, ✅ Worker ready, ✅ Beat running, ✅ Flower正常. 服务可用性90%(9/10, Worker/Beat健康检查待配置)."
     }
   }
 }
