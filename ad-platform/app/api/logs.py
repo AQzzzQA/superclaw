@@ -7,6 +7,7 @@ from fastapi import APIRouter, Query
 from pydantic import BaseModel
 from datetime import datetime
 from app.core.response import APIResponse
+from app.core.exceptions import NotFoundException
 import uuid
 
 router = APIRouter()

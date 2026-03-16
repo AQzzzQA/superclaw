@@ -4,7 +4,7 @@
 
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
-from typing import Optional
+from typing import Optional, List, Query
 from pydantic import BaseModel, Field
 from datetime import datetime
 from app.core.response import APIResponse
@@ -12,6 +12,7 @@ from app.api.auth import get_current_user
 from app.core.database import get_db
 from app.models.conversion import Conversion
 from app.models.ocean_account import OceanAccount
+from app.models.user import User
 from app.tasks.conversion import batch_upload_conversion_task
 
 router = APIRouter(prefix="/conversion", tags=["Conversion"])

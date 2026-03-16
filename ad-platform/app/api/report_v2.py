@@ -134,8 +134,8 @@ async def get_trend_report(
     try:
         # 获取数据
         reports = db.query(DailyReport).filter(
-            dailyReport.tenant_id == current_user.tenant_id,
-            dailyReport.advertiser_id == advertiser_id,
+            DailyReport.tenant_id == current_user.tenant_id,
+            DailyReport.advertiser_id == advertiser_id,
         )
 
         if campaign_id:
@@ -191,8 +191,8 @@ async def export_report(
     try:
         # 获取数据
         reports = db.query(DailyReport).filter(
-            dailyReport.tenant_id == current_user.tenant_id,
-            dailyReport.advertiser_id == advertiser_id,
+            DailyReport.tenant_id == current_user.tenant_id,
+            DailyReport.advertiser_id == advertiser_id,
         )
 
         if start_date:
