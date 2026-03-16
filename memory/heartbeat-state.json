@@ -1,1 +1,79 @@
-{"lastChecks": {"code_health": 1773249215, "dependencies": 1773144600, "docs": 1773157200, "performance": 1773296649, "security": 1773148200, "quick_check_2026_03_13_03_46": 1743329963}, "issuesFound": {"high": 0, "medium": 40, "low": 0, "total": 40}, "issuesFixed": {"auto": 14, "manual": 0}, "systemMetrics": {"uptimeHours": 125, "dockerContainers": 2, "externalServices": {"management": 200, "apiHealth": 200}, "adPlatformProcesses": 0, "uncommittedChanges": 0, "codeHealth": {"issues": 40, "breakdown": {"F401": 39, "E501": 1}}}, "lastReport": 1741917309, "totalScans": 239, "recentScans": {"quick_check_2026_03_16_03_33": {"date": "2026-03-16 03:33", "result": "✅ 状态良好", "notes": "系统稳定运行(~125小时). Docker: 权限前端(69小时)✅ 权限后端(69小时)✅. 外网: API健康200✅. 进程状态: Ad Platform进程未运行(0个celery/uvicorn/fastapi进程). 未提交: 0个文件改动(已提交到git). 代码质量: 40个待处理问题(39个F401 + 1个E501)."}}}
+{
+  "lastChecks": {
+    "code_health": 1742095200,
+    "dependencies": 1773144600,
+    "docs": 1773157200,
+    "performance": 1742083380,
+    "security": 1773148200,
+    "quick_check_2026_03_16_05_23": 1742083380,
+    "quick_check_2026_03_16_05_53": 1742085180,
+    "quick_check_2026_03_16_06_23": 1742086980,
+    "quick_check_2026_03_16_06_53": 1742088780,
+    "quick_check_2026_03_16_07_23": 1742090580,
+    "quick_check_2026_03_16_07_53": 1742092380,
+    "code_fix_2026_03_16_08_32": 1742095200
+  },
+  "issuesFound": {
+    "high": 0,
+    "medium": 2,
+    "low": 0,
+    "total": 2
+  },
+  "issuesFixed": {
+    "auto": 19,
+    "manual": 0
+  },
+  "systemMetrics": {
+    "uptimeHours": 126,
+    "dockerContainers": 7,
+    "externalServices": {
+      "management": 200,
+      "apiHealth": 200
+    },
+    "adPlatformProcesses": 0,
+    "uncommittedChanges": 0,
+    "codeHealth": {
+      "todoMarkers": 34,
+      "outdatedPackages": 8
+    }
+  },
+  "lastReport": 1742083380,
+  "totalScans": 244,
+  "recentScans": {
+    "quick_check_2026_03_16_05_23": {
+      "date": "2026-03-16 05:23",
+      "result": "✅ 状态良好",
+      "notes": "DSP Platform: 7/7服务健康(Backend/MySQL/Redis全部healthy). API健康检查200✅. 无错误日志. 代码: 34个TODO标记, 8个过时包. 待处理: 2个文件未提交."
+    },
+    "quick_check_2026_03_16_05_53": {
+      "date": "2026-03-16 05:53",
+      "result": "✅ 系统健康",
+      "notes": "DSP Platform: 9/9服务正常(Backend/MySQL/Redis/Worker/Beat/Flower/Grafana/Nginx/Permissions). API健康检查100%通过(self✅ database✅ redis✅). 无错误日志. 磁盘使用79%. 未提交文件: 4个. TODO标记: 16个文件."
+    },
+    "quick_check_2026_03_16_06_23": {
+      "date": "2026-03-16 06:23",
+      "result": "✅ 系统健康",
+      "notes": "DSP Platform: 9/9服务正常. API健康检查100%通过. 无错误日志(30min). 内存使用21.5%(768MiB/3.57GiB). CPU 0.00-0.48%. 磁盘79%. 未提交文件: 5个. 性能: MySQL 353MiB, Worker 90.5MiB, Grafana 83.8MiB."
+    },
+    "quick_check_2026_03_16_06_53": {
+      "date": "2026-03-16 06:53",
+      "result": "✅ 系统健康",
+      "notes": "DSP Platform: 9/9服务正常. API健康检查100%通过. 无错误日志(1h). 内存使用61.1%(2.2Gi/3.6Gi). 磁盘79%. 未提交文件: 6个. 响应时间<3s."
+    },
+    "quick_check_2026_03_16_07_23": {
+      "date": "2026-03-16 07:23",
+      "result": "✅ 系统健康",
+      "notes": "DSP Platform: 9/9服务正常. API健康检查100%通过(self✅ database✅ redis✅). 无错误日志(30m). 磁盘空间正常. 磁盘使用率<80%. Flower监控正常."
+    },
+    "quick_check_2026_03_16_07_53": {
+      "date": "2026-03-16 07:53",
+      "result": "✅ 系统健康",
+      "notes": "DSP Platform: 9/9服务正常(Backend/MySQL/Redis/Worker/Beat/Flower/Grafana/Nginx/Permissions). API健康检查100%通过(self✅ database✅ redis✅). 无错误日志(30m). 磁盘79%. 运行时间3h."
+    },
+    "code_fix_2026_03_16_08_32": {
+      "date": "2026-03-16 08:32",
+      "result": "✅ Backend 修复完成",
+      "notes": "问题: Backend容器退出, ImportError: cannot import name 'Base'. 修复: 修改app/models/__init__.py导入路径(从app.database导入), 添加缺失的ForeignKey导入, 添加email-validator依赖. 重新构建backend镜像. 结果: ✅ Backend服务健康运行, API正常响应(self✅ database✅ redis✅). 修复文件: 3个(__init__.py, audience.py, requirements.txt)."
+    }
+  }
+}
