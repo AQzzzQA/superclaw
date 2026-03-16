@@ -442,3 +442,25 @@ const response = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completi
 - ✅ 记录到 TODO.md
 - 📊 累计扫描：251次
 - 📊 当前问题：2个中优先级
+
+---
+
+### 第252次心跳检查（2026-03-17 06:44）
+- ✅ 性能监控检查完成
+- 📊 Docker容器状态
+  - 11个容器运行中
+  - DSP Platform: 8个（backend、nginx、celery、mysql、redis、grafana、prometheus、flower）
+  - 权限系统: 2个（backend、frontend）
+  - 所有容器健康状态正常
+- 📊 日志分析
+  - Ad Platform日志文件为空（配置问题，需检查日志配置）
+  - Celery: 2个deprecation警告（broker_connection_retry）
+  - 无ERROR/WARNING级别错误
+- 📊 API健康检查
+  - DSP Backend `/`: ✅ 返回正常（200ms）
+  - DSP Nginx `/health`: ✅ 返回healthy
+  - Flower UI: ✅ 200
+  - Grafana: ✅ 302重定向
+- ✅ 系统运行稳定
+- 📊 累计扫描：252次
+- 📊 容器数更新：8 → 11个（包含权限系统）

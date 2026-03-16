@@ -3,7 +3,7 @@
     "code_health": 1758044400,
     "dependencies": 1758052040,
     "docs": 1773157200,
-    "performance": 1773514580,
+    "performance": 1758054040,
     "security": 1773148200,
     "permissions_git_docs": 1773677760,
     "permissions_git_test": 1773678800
@@ -20,7 +20,7 @@
   },
   "systemMetrics": {
     "uptimeHours": 127,
-    "dockerContainers": 8,
+    "dockerContainers": 11,
     "externalServices": {
       "management": 200,
       "apiHealth": 200
@@ -30,11 +30,26 @@
     "codeHealth": {
       "todoMarkers": 0,
       "outdatedPackages": 13
-    }
+    },
+    "services": {
+      "dsp_backend": "running (200ms)",
+      "dsp_nginx": "running (healthy)",
+      "dsp_flower": "running (200)",
+      "dsp_grafana": "running (302 redirect)",
+      "permissions_backend": "running (port 3001)",
+      "permissions_frontend": "running (port 3000)"
+    },
+    "warnings": 1,
+    "errors": 0
   },
-  "lastReport": 1758052040,
-  "totalScans": 251,
+  "lastReport": 1758054040,
+  "totalScans": 252,
   "recentScans": {
+    "performance_2026_03_17_06_44": {
+      "date": "2026-03-17 06:44",
+      "result": "✅ 性能监控检查 - 系统运行稳定",
+      "notes": "Docker: 11个容器运行中 (DSP 8个, 权限系统 2个). 日志: Ad Platform日志文件为空 (配置问题). Celery: 2个deprecation警告 (broker_connection_retry). API: / 返回正常 (200ms), /health路径不正确 (应使用/). Nginx: /health端点返回healthy. 结论: 系统运行稳定,无ERROR/WARNING错误,1个deprecation警告(低风险)."
+    },
     "dependencies_2026_03_17_06_14": {
       "date": "2026-03-17 06:14",
       "result": "⚠️ 依赖管理检查 - 发现前端安全问题",
