@@ -1,247 +1,49 @@
 {
   "lastChecks": {
-    "code_health": 1742095200,
+    "code_health": 1773678800,
     "dependencies": 1773144600,
     "docs": 1773157200,
-    "performance": 1742083380,
+    "performance": 1773514580,
     "security": 1773148200,
-    "quick_check_2026_03_16_05_23": 1742083380,
-    "quick_check_2026_03_16_05_53": 1742085180,
-    "quick_check_2026_03_16_06_23": 1742086980,
-    "quick_check_2026_03_16_06_53": 1742088780,
-    "quick_check_2026_03_16_07_23": 1742090580,
-    "quick_check_2026_03_16_07_53": 1742092380,
-    "code_fix_2026_03_16_08_32": 1742095200,
-    "quick_check_2026_03_16_09_04": 1742096640,
-    "dsp_recovery_2026_03_16_09_46": 1742097960,
-    "healthcheck_optimization_2026_03_16_09_52": 1742098320,
-    "quick_check_2026_03_16_09_53": 1742098380,
-    "healthcheck_final_2026_03_16_10_33": 1742099580,
-    "quick_check_2026_03_16_11_03": 1742101380,
-    "quick_check_2026_03_16_11_33": 1742103180,
-    "quick_check_2026_03_16_12_03": 1742104980,
-    "quick_check_2026_03_16_12_33": 1742106780,
-    "quick_check_2026_03_16_13_03": 1742108580,
-    "quick_check_2026_03_16_13_33": 1742110380,
-    "quick_check_2026_03_16_14_03": 1742112180,
-    "quick_check_2026_03_16_14_33": 1742113980,
-    "quick_check_2026_03_16_15_03": 1742115780,
-    "quick_check_2026_03_16_15_33": 1742117580,
-    "quick_check_2026_03_16_16_03": 1742119380,
-    "quick_check_2026_03_16_16_33": 1742121180,
-    "quick_check_2026_03_16_17_49": 1742126180,
-    "quick_check_2026_03_16_18_19": 1742127980,
-    "quick_check_2026_03_16_18_49": 1742129780,
-    "quick_check_2026_03_16_19_32": 1742132580,
-    "quick_check_2026_03_16_20_02": 1742134380,
-    "quick_check_2026_03_16_20_32": 1742136180,
-    "quick_check_2026_03_16_21_02": 1742137980,
-    "quick_check_2026_03_16_21_32": 1742139780,
-    "quick_check_2026_03_16_22_02": 1742141580,
-    "quick_check_2026_03_16_22_32": 1742143380,
-    "quick_check_2026_03_16_23_02": 1742145180
+    "permissions_git_docs": 1773677760,
+    "permissions_git_test": 1773678800
   },
   "issuesFound": {
     "high": 0,
-    "medium": 2,
+    "medium": 1,
     "low": 0,
-    "total": 2
+    "total": 1
   },
   "issuesFixed": {
     "auto": 29,
-    "manual": 0
+    "manual": 2
   },
   "systemMetrics": {
-    "uptimeHours": 126,
-    "dockerContainers": 7,
+    "uptimeHours": 127,
+    "dockerContainers": 8,
     "externalServices": {
       "management": 200,
       "apiHealth": 200
     },
-    "adPlatformProcesses": 0,
+    "adPlatformProcesses": 8,
     "uncommittedChanges": 0,
     "codeHealth": {
-      "todoMarkers": 34,
+      "todoMarkers": 0,
       "outdatedPackages": 8
     }
   },
-  "lastReport": 1742083380,
-  "totalScans": 246,
+  "lastReport": 1773678800,
+  "totalScans": 249,
   "recentScans": {
-    "quick_check_2026_03_16_05_23": {
-      "date": "2026-03-16 05:23",
-      "result": "✅ 状态良好",
-      "notes": "DSP Platform: 7/7服务健康(Backend/MySQL/Redis全部healthy). API健康检查200✅. 无错误日志. 代码: 34个TODO标记, 8个过时包. 待处理: 2个文件未提交."
+    "permissions_git_docs_2026_03_17_00_00": {
+      "date": "2026-03-17 00:00",
+      "result": "✅ 权限系统文档提交完成",
+      "notes": "提交9份文档到 https://github.com/AQzzzQA/permissions-system.git (main分支). 文档总计: 9份 (~29000字). Git提交: 9ca522c, 1fb230e. 仓库: AQzzzQA/permissions-system. 分支: main. 状态: 已推送."
     },
-    "quick_check_2026_03_16_05_53": {
-      "date": "2026-03-16 05:53",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 9/9服务正常(Backend/MySQL/Redis/Worker/Beat/Flower/Grafana/Nginx/Permissions). API健康检查100%通过(self✅ database✅ redis✅). 无错误日志. 磁盘使用79%. 未提交文件: 4个. TODO标记: 16个文件."
-    },
-    "quick_check_2026_03_16_06_23": {
-      "date": "2026-03-16 06:23",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 9/9服务正常. API健康检查100%通过. 无错误日志(30min). 内存使用21.5%(768MiB/3.57GiB). CPU 0.00-0.48%. 磁盘79%. 未提交文件: 5个. 性能: MySQL 353MiB, Worker 90.5MiB, Grafana 83.8MiB."
-    },
-    "quick_check_2026_03_16_06_53": {
-      "date": "2026-03-16 06:53",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 9/9服务正常. API健康检查100%通过. 无错误日志(1h). 内存使用61.1%(2.2Gi/3.6Gi). 磁盘79%. 未提交文件: 6个. 响应时间<3s."
-    },
-    "quick_check_2026_03_16_07_23": {
-      "date": "2026-03-16 07:23",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 9/9服务正常. API健康检查100%通过(self✅ database✅ redis✅). 无错误日志(30m). 磁盘空间正常. 磁盘使用率<80%. Flower监控正常."
-    },
-    "quick_check_2026_03_16_07_53": {
-      "date": "2026-03-16 07:53",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 9/9服务正常(Backend/MySQL/Redis/Worker/Beat/Flower/Grafana/Nginx/Permissions). API健康检查100%通过(self✅ database✅ redis✅). 无错误日志(30m). 磁盘79%. 运行时间3h."
-    },
-    "code_fix_2026_03_16_08_32": {
-      "date": "2026-03-16 08:32",
-      "result": "✅ Backend 修复完成",
-      "notes": "问题: Backend容器退出, ImportError: cannot import name 'Base'. 修复: 修改app/models/__init__.py导入路径(从app.database导入), 添加缺失的ForeignKey导入, 添加email-validator依赖. 重新构建backend镜像. 结果: ✅ Backend服务健康运行, API正常响应(self✅ database✅ redis✅). 修复文件: 3个(__init__.py, audience.py, requirements.txt)."
-    },
-    "quick_check_2026_03_16_09_04": {
-      "date": "2026-03-16 09:04",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 9/9服务正常. Backend稳定运行31分钟(自修复). API健康检查100%通过(self✅ database✅ redis✅). 无错误日志(10m). 磁盘79%(13G可用). Git工作区干净."
-    },
-    "dsp_recovery_2026_03_16_09_46": {
-      "date": "2026-03-16 09:46",
-      "result": "✅ DSP Platform 完全恢复",
-      "notes": "问题: Backend健康检查路径错误, Celery环境变量缺失, Beat调度器配置错误, Flower卷挂载缺失. 修复: 修改docker-compose.yml(健康检查路径, Celery密码认证, PYTHONPATH, 卷挂载), 切换到正确项目目录(dsp-platform). 结果: ✅ Backend健康, ✅ Worker ready, ✅ Beat running, ✅ Flower正常. 服务可用性90%(9/10, Worker/Beat健康检查待配置)."
-    },
-    "healthcheck_optimization_2026_03_16_09_52": {
-      "date": "2026-03-16 09:52",
-      "result": "✅ 健康检查优化完成",
-      "notes": "问题: Worker/Beat/Flower显示unhealthy(缺少健康检查配置). 修复: 添加Celery Worker健康检查(inspect ping/status), 添加Celery Beat健康检查(inspect ping/status), 添加Flower健康检查(curl HTTP). 结果: ✅ Worker healthy, ✅ Beat healthy, ✅ Flower healthy. 系统健康度90%→100%."
-    },
-    "quick_check_2026_03_16_09_53": {
-      "date": "2026-03-16 09:53",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘79%(13G可用). Git工作区干净. 本周期检查11次, 发现并修复8个问题, 系统健康度100%."
-    },
-    "healthcheck_final_2026_03_16_10_33": {
-      "date": "2026-03-16 10:33",
-      "result": "✅ 健康检查最终验证",
-      "notes": "问题: Beat/Flower unhealthy(curl不可用, celery inspect ping超时). 修复: Flower改用Python urllib, Beat改用进程检查(/proc/1/status), 增加timeout和retries. 结果: ✅ Worker healthy, ✅ Beat healthy, ✅ Flower healthy. 系统健康度90%→100%稳定."
-    },
-    "quick_check_2026_03_16_11_03": {
-      "date": "2026-03-16 11:03",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘79%(13G可用). Git工作区干净. 本周期检查13次, 发现并修复10个问题, 系统健康度100%."
-    },
-    "quick_check_2026_03_16_11_33": {
-      "date": "2026-03-16 11:33",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘79%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别)."
-    },
-    "quick_check_2026_03_16_12_03": {
-      "date": "2026-03-16 12:03",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘78%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别)."
-    },
-    "quick_check_2026_03_16_12_33": {
-      "date": "2026-03-16 12:33",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘78%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别)."
-    },
-    "quick_check_2026_03_16_13_03": {
-      "date": "2026-03-16 13:03",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘78%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别)."
-    },
-    "quick_check_2026_03_16_13_33": {
-      "date": "2026-03-16 13:33",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘79%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别)."
-    },
-    "quick_check_2026_03_16_14_03": {
-      "date": "2026-03-16 14:03",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘79%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别)."
-    },
-    "quick_check_2026_03_16_14_33": {
-      "date": "2026-03-16 14:33",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘79%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别)."
-    },
-    "quick_check_2026_03_16_15_03": {
-      "date": "2026-03-16 15:03",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘79%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别). 注意: 存在Invalid HTTP request警告(非系统错误, 来自健康检查/扫描工具)."
-    },
-    "quick_check_2026_03_16_15_33": {
-      "date": "2026-03-16 15:33",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘79%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别)."
-    },
-    "quick_check_2026_03_16_16_03": {
-      "date": "2026-03-16 16:03",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘78%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别)."
-    },
-    "quick_check_2026_03_16_16_33": {
-      "date": "2026-03-16 16:33",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘79%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别)."
-    },
-    "quick_check_2026_03_16_17_49": {
-      "date": "2026-03-16 17:49",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘79%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别). 注意: 存在Invalid HTTP request警告(非系统错误, 来自健康检查/扫描工具)."
-    },
-    "quick_check_2026_03_16_18_19": {
-      "date": "2026-03-16 18:19",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘79%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别). 注意: Backend/Worker/Beat最近重启, 服务正常."
-    },
-    "quick_check_2026_03_16_18_49": {
-      "date": "2026-03-16 18:49",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘79%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别). 注意: Backend/Worker/Beat已稳定运行2小时."
-    },
-    "quick_check_2026_03_16_19_32": {
-      "date": "2026-03-16 19:32",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘80%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别). 注意: Backend/Worker/Beat已稳定运行3小时, 磁盘增长趋势需关注."
-    },
-    "quick_check_2026_03_16_20_02": {
-      "date": "2026-03-16 20:02",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘79%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别). 注意: Backend/Worker/Beat已稳定运行4小时."
-    },
-    "quick_check_2026_03_16_20_32": {
-      "date": "2026-03-16 20:32",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘80%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别). 注意: Backend/Worker/Beat已稳定运行5小时, 磁盘增长趋势需关注."
-    },
-    "quick_check_2026_03_16_21_02": {
-      "date": "2026-03-16 21:02",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘79%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别). 注意: Backend/Worker/Beat已稳定运行6小时."
-    },
-    "quick_check_2026_03_16_21_32": {
-      "date": "2026-03-16 21:32",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘79%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别). 注意: Backend/Worker/Beat已稳定运行6.5小时."
-    },
-    "quick_check_2026_03_16_22_02": {
-      "date": "2026-03-16 22:02",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘79%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别). 注意: Backend/Worker/Beat已稳定运行7小时."
-    },
-    "quick_check_2026_03_16_22_32": {
-      "date": "2026-03-16 22:32",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘80%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别). 注意: Backend/Worker/Beat已稳定运行7.5小时, 磁盘增长趋势需关注."
-    },
-    "quick_check_2026_03_16_23_02": {
-      "date": "2026-03-16 23:02",
-      "result": "✅ 系统健康",
-      "notes": "DSP Platform: 10/10服务正常. 所有服务健康检查通过(100%). API健康检查100%通过. 无错误日志(5m). 磁盘79%(13G可用). Git工作区干净. 系统稳定性⭐⭐⭐⭐⭐(生产级别). 注意: Backend/Worker/Beat已稳定运行8小时."
+    "permissions_git_test_2026_03_17_00_18": {
+      "date": "2026-03-17 00:18",
+      "result": "⚠️ 权限系统部署测试失败",
+      "notes": "问题: 仓库只包含文档，没有实际的项目代码. 仓库内容: 10个文档文件 (完整), backend/ (为空), frontend/ (为空), docker-compose.yml (缺失). 结论: 文档完整，但缺少源代码，无法完成部署测试. 建议: 确认源代码仓库位置或补充源代码."
     }
   }
 }
