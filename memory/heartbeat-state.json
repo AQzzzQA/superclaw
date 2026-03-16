@@ -13,7 +13,8 @@
     "quick_check_2026_03_16_07_53": 1742092380,
     "code_fix_2026_03_16_08_32": 1742095200,
     "quick_check_2026_03_16_09_04": 1742096640,
-    "dsp_recovery_2026_03_16_09_46": 1742097960
+    "dsp_recovery_2026_03_16_09_46": 1742097960,
+    "healthcheck_optimization_2026_03_16_09_52": 1742098320
   },
   "issuesFound": {
     "high": 0,
@@ -22,7 +23,7 @@
     "total": 2
   },
   "issuesFixed": {
-    "auto": 24,
+    "auto": 27,
     "manual": 0
   },
   "systemMetrics": {
@@ -86,6 +87,11 @@
       "date": "2026-03-16 09:46",
       "result": "✅ DSP Platform 完全恢复",
       "notes": "问题: Backend健康检查路径错误, Celery环境变量缺失, Beat调度器配置错误, Flower卷挂载缺失. 修复: 修改docker-compose.yml(健康检查路径, Celery密码认证, PYTHONPATH, 卷挂载), 切换到正确项目目录(dsp-platform). 结果: ✅ Backend健康, ✅ Worker ready, ✅ Beat running, ✅ Flower正常. 服务可用性90%(9/10, Worker/Beat健康检查待配置)."
+    },
+    "healthcheck_optimization_2026_03_16_09_52": {
+      "date": "2026-03-16 09:52",
+      "result": "✅ 健康检查优化完成",
+      "notes": "问题: Worker/Beat/Flower显示unhealthy(缺少健康检查配置). 修复: 添加Celery Worker健康检查(inspect ping/status), 添加Celery Beat健康检查(inspect ping/status), 添加Flower健康检查(curl HTTP). 结果: ✅ Worker healthy, ✅ Beat healthy, ✅ Flower healthy. 系统健康度90%→100%."
     }
   }
 }

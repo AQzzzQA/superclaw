@@ -89,6 +89,10 @@ services:
       - ./backend:/app
       - uploads:/app/uploads
       - logs:/app/logs
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A app.tasks.worker inspect ping 2>&1 | grep -E 'pong|OK|online' || celery -A app.tasks.worker status 2>&1 | grep -q 'OK'"]
+      timeout: 10s
+      retries: 5
     depends_on:
       mysql:
         condition: service_healthy
@@ -144,6 +148,10 @@ services:
       - "0.0.0.0:5555:5555"
     volumes:
       - ./backend:/app
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5555 || exit 1"]
+      timeout: 5s
+      retries: 3
     depends_on:
       redis:
         condition: service_healthy
