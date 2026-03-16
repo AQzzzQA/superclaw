@@ -422,3 +422,23 @@ const response = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completi
 - ✅ Git提交：03b9a3f
 - 📊 累计自动修复：30次
 - 📊 累计扫描：250次
+
+---
+
+### 第251次心跳检查（2026-03-17 06:14）
+- ⚠️ 依赖管理检查完成
+- 📊 前端依赖状态
+  - 13个过时包
+  - Vite: 6.4.1 → 8.0.0
+  - Ant Design: 5.29.3 → 6.3.3
+  - React插件多个主版本更新可用
+- ⚠️ 安全漏洞发现
+  - 1个高危漏洞：flatted <3.4.0 (GHSA-25h7-pfq9-p65f)
+  - 风险：无限递归DoS攻击
+- 🔧 修复限制
+  - 缺少 package-lock.json
+  - 无法运行 `npm audit fix`
+  - 需要先运行 `npm i --package-lock-only`
+- ✅ 记录到 TODO.md
+- 📊 累计扫描：251次
+- 📊 当前问题：2个中优先级

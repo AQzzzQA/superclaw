@@ -1,7 +1,7 @@
 {
   "lastChecks": {
     "code_health": 1758044400,
-    "dependencies": 1773144600,
+    "dependencies": 1758052040,
     "docs": 1773157200,
     "performance": 1773514580,
     "security": 1773148200,
@@ -10,9 +10,9 @@
   },
   "issuesFound": {
     "high": 0,
-    "medium": 1,
+    "medium": 2,
     "low": 0,
-    "total": 1
+    "total": 2
   },
   "issuesFixed": {
     "auto": 30,
@@ -26,15 +26,20 @@
       "apiHealth": 200
     },
     "adPlatformProcesses": 8,
-    "uncommittedChanges": 0,
+    "uncommittedChanges": 1,
     "codeHealth": {
       "todoMarkers": 0,
-      "outdatedPackages": 8
+      "outdatedPackages": 13
     }
   },
-  "lastReport": 1758044400,
-  "totalScans": 250,
+  "lastReport": 1758052040,
+  "totalScans": 251,
   "recentScans": {
+    "dependencies_2026_03_17_06_14": {
+      "date": "2026-03-17 06:14",
+      "result": "⚠️ 依赖管理检查 - 发现前端安全问题",
+      "notes": "前端: 13个过时包 (Vite 6.4.1→8.0.0, Ant Design 5.29.3→6.3.3等). 安全: 1个高危漏洞 (flatted <3.4.0, GHSA-25h7-pfq9-p65f). 限制: 缺少package-lock.json,无法运行npm audit fix. 后端: 8个过时包 (未检查). 状态: 已记录到TODO.md."
+    },
     "code_health_2026_03_17_04_14": {
       "date": "2026-03-17 04:14",
       "result": "✅ 代码健康检查 - 发现并修复17个F821错误",
