@@ -4,7 +4,7 @@
     "dependencies": 1758052040,
     "docs": 1773157200,
     "performance": 1758054040,
-    "security": 1773148200,
+    "security": 1758060040,
     "permissions_git_docs": 1773677760,
     "permissions_git_test": 1773678800
   },
@@ -42,9 +42,14 @@
     "warnings": 1,
     "errors": 0
   },
-  "lastReport": 1758056440,
-  "totalScans": 253,
+  "lastReport": 1758060040,
+  "totalScans": 254,
   "recentScans": {
+    "security_2026_03_17_07_44": {
+      "date": "2026-03-17 07:44",
+      "result": "✅ 安全审计完成 - 无敏感信息泄露",
+      "notes": "敏感信息扫描: 未发现硬编码密钥/密码. .env.example检查: ad-platform、dsp-platform配置完善,占位符明确. 日志检查: 后端日志无敏感信息泄露. 数据库: 连接数正常,无异常连接. 权限配置: JWT认证、RBAC权限系统已实现. 结论: 安全配置良好,无高风险问题."
+    },
     "code_health_2026_03_17_07_14": {
       "date": "2026-03-17 07:14",
       "result": "✅ 代码健康检查 - 无新问题",
