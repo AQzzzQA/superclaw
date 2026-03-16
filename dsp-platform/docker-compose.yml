@@ -91,8 +91,9 @@ services:
       - logs:/app/logs
     healthcheck:
       test: ["CMD-SHELL", "celery -A app.tasks.worker inspect ping 2>&1 | grep -E 'pong|OK|online' || celery -A app.tasks.worker status 2>&1 | grep -q 'OK'"]
-      timeout: 10s
-      retries: 5
+      timeout: 20s
+      retries: 10
+      interval: 30s
     depends_on:
       mysql:
         condition: service_healthy
@@ -120,6 +121,11 @@ services:
     volumes:
       - ./backend:/app
       - logs:/app/logs
+    healthcheck:
+      test: ["CMD-SHELL", "cat /proc/1/status | grep -q 'Name:.celery' || exit 1"]
+      timeout: 5s
+      retries: 5
+      interval: 15s
     depends_on:
       mysql:
         condition: service_healthy
@@ -149,7 +155,7 @@ services:
     volumes:
       - ./backend:/app
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5555 || exit 1"]
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:5555\", timeout=5).read()'"]
       timeout: 5s
       retries: 3
     depends_on:
