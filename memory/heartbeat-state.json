@@ -1,6 +1,6 @@
 {
   "lastChecks": {
-    "code_health": 1758044400,
+    "code_health": 1758056440,
     "dependencies": 1758052040,
     "docs": 1773157200,
     "performance": 1758054040,
@@ -19,32 +19,37 @@
     "manual": 2
   },
   "systemMetrics": {
-    "uptimeHours": 127,
+    "uptimeHours": 128,
     "dockerContainers": 11,
     "externalServices": {
       "management": 200,
       "apiHealth": 200
     },
     "adPlatformProcesses": 8,
-    "uncommittedChanges": 1,
+    "uncommittedChanges": 0,
     "codeHealth": {
       "todoMarkers": 0,
       "outdatedPackages": 13
     },
     "services": {
-      "dsp_backend": "running (200ms)",
-      "dsp_nginx": "running (healthy)",
-      "dsp_flower": "running (200)",
-      "dsp_grafana": "running (302 redirect)",
-      "permissions_backend": "running (port 3001)",
-      "permissions_frontend": "running (port 3000)"
+      "dsp_backend": "running",
+      "dsp_nginx": "running",
+      "dsp_flower": "running",
+      "dsp_grafana": "running",
+      "permissions_backend": "running",
+      "permissions_frontend": "running"
     },
     "warnings": 1,
     "errors": 0
   },
-  "lastReport": 1758054040,
-  "totalScans": 252,
+  "lastReport": 1758056440,
+  "totalScans": 253,
   "recentScans": {
+    "code_health_2026_03_17_07_14": {
+      "date": "2026-03-17 07:14",
+      "result": "✅ 代码健康检查 - 无新问题",
+      "notes": "TODO/FIXME标记: 0个. 未提交改动: 0个 (gittest/FINAL-COMPLETE.md已提交). 代码规范: 无需重新检查. Git状态: 工作区干净. 状态: 正常."
+    },
     "performance_2026_03_17_06_44": {
       "date": "2026-03-17 06:44",
       "result": "✅ 性能监控检查 - 系统运行稳定",
@@ -54,21 +59,6 @@
       "date": "2026-03-17 06:14",
       "result": "⚠️ 依赖管理检查 - 发现前端安全问题",
       "notes": "前端: 13个过时包 (Vite 6.4.1→8.0.0, Ant Design 5.29.3→6.3.3等). 安全: 1个高危漏洞 (flatted <3.4.0, GHSA-25h7-pfq9-p65f). 限制: 缺少package-lock.json,无法运行npm audit fix. 后端: 8个过时包 (未检查). 状态: 已记录到TODO.md."
-    },
-    "code_health_2026_03_17_04_14": {
-      "date": "2026-03-17 04:14",
-      "result": "✅ 代码健康检查 - 发现并修复17个F821错误",
-      "notes": "问题类型: undefined name (F821). 修复文件: conversion_v2.py (14个), logs.py (1个), report_v2.py (2个). 修复内容: 添加缺失的导入 (List, Query, User, NotFoundException), 修正变量名拼写错误 (dailyReport→DailyReport). Git提交: 03b9a3f. 状态: 已提交."
-    },
-    "permissions_git_docs_2026_03_17_00_00": {
-      "date": "2026-03-17 00:00",
-      "result": "✅ 权限系统文档提交完成",
-      "notes": "提交9份文档到 https://github.com/AQzzzQA/permissions-system.git (main分支). 文档总计: 9份 (~29000字). Git提交: 9ca522c, 1fb230e. 仓库: AQzzzQA/permissions-system. 分支: main. 状态: 已推送."
-    },
-    "permissions_git_test_2026_03_17_00_18": {
-      "date": "2026-03-17 00:18",
-      "result": "⚠️ 权限系统部署测试失败",
-      "notes": "问题: 仓库只包含文档，没有实际的项目代码. 仓库内容: 10个文档文件 (完整), backend/ (为空), frontend/ (为空), docker-compose.yml (缺失). 结论: 文档完整，但缺少源代码，无法完成部署测试. 建议: 确认源代码仓库位置或补充源代码."
     }
   }
 }
