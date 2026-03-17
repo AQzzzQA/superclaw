@@ -1,6 +1,6 @@
 {
   "lastChecks": {
-    "code_health": 1758056440,
+    "code_health": 1758062040,
     "dependencies": 1758052040,
     "docs": 1773157200,
     "performance": 1758054040,
@@ -19,7 +19,7 @@
     "manual": 2
   },
   "systemMetrics": {
-    "uptimeHours": 128,
+    "uptimeHours": 129,
     "dockerContainers": 11,
     "externalServices": {
       "management": 200,
@@ -42,9 +42,14 @@
     "warnings": 1,
     "errors": 0
   },
-  "lastReport": 1758060040,
-  "totalScans": 254,
+  "lastReport": 1758062040,
+  "totalScans": 255,
   "recentScans": {
+    "code_health_2026_03_17_08_14": {
+      "date": "2026-03-17 08:14",
+      "result": "✅ 代码健康检查 - 无新问题",
+      "notes": "TODO/FIXME标记: 0个. 未提交改动: 1个 (gittest submodule reference已提交). Git提交: 489d350. 工作区: 干净. 状态: 正常."
+    },
     "security_2026_03_17_07_44": {
       "date": "2026-03-17 07:44",
       "result": "✅ 安全审计完成 - 无敏感信息泄露",
@@ -54,16 +59,6 @@
       "date": "2026-03-17 07:14",
       "result": "✅ 代码健康检查 - 无新问题",
       "notes": "TODO/FIXME标记: 0个. 未提交改动: 0个 (gittest/FINAL-COMPLETE.md已提交). 代码规范: 无需重新检查. Git状态: 工作区干净. 状态: 正常."
-    },
-    "performance_2026_03_17_06_44": {
-      "date": "2026-03-17 06:44",
-      "result": "✅ 性能监控检查 - 系统运行稳定",
-      "notes": "Docker: 11个容器运行中 (DSP 8个, 权限系统 2个). 日志: Ad Platform日志文件为空 (配置问题). Celery: 2个deprecation警告 (broker_connection_retry). API: / 返回正常 (200ms), /health路径不正确 (应使用/). Nginx: /health端点返回healthy. 结论: 系统运行稳定,无ERROR/WARNING错误,1个deprecation警告(低风险)."
-    },
-    "dependencies_2026_03_17_06_14": {
-      "date": "2026-03-17 06:14",
-      "result": "⚠️ 依赖管理检查 - 发现前端安全问题",
-      "notes": "前端: 13个过时包 (Vite 6.4.1→8.0.0, Ant Design 5.29.3→6.3.3等). 安全: 1个高危漏洞 (flatted <3.4.0, GHSA-25h7-pfq9-p65f). 限制: 缺少package-lock.json,无法运行npm audit fix. 后端: 8个过时包 (未检查). 状态: 已记录到TODO.md."
     }
   }
 }
