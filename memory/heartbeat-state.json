@@ -1,6 +1,6 @@
 {
   "lastChecks": {
-    "code_health": 1758102640,
+    "code_health": 1758106240,
     "dependencies": 1758104440,
     "docs": 1758095640,
     "performance": 1758100800,
@@ -19,7 +19,7 @@
     "manual": 2
   },
   "systemMetrics": {
-    "uptimeHours": 142,
+    "uptimeHours": 143,
     "dockerContainers": 11,
     "externalServices": {
       "management": 200,
@@ -47,9 +47,14 @@
     "warnings": 1,
     "errors": 0
   },
-  "lastReport": 1758104440,
-  "totalScans": 279,
+  "lastReport": 1758106240,
+  "totalScans": 280,
   "recentScans": {
+    "code_health_2026_03_17_20_50": {
+      "date": "2026-03-17 20:50",
+      "result": "✅ 代码健康检查 - 无新问题",
+      "notes": "TODO/FIXME标记: 0个. 未提交改动: 0个. 工作区: 干净. Docker状态: 11个容器运行(6健康,5未标记健康检查). 状态: 正常."
+    },
     "dependencies_2026_03_17_20_20": {
       "date": "2026-03-17 20:20",
       "result": "✅ 依赖管理检查 - 无新问题",
@@ -59,11 +64,6 @@
       "date": "2026-03-17 19:50",
       "result": "✅ 代码健康检查 - 无新问题",
       "notes": "TODO/FIXME标记: 0个. 未提交改动: 0个. 工作区: 干净. Docker状态: 11个容器运行(6健康,5未标记健康检查). 状态: 正常."
-    },
-    "performance_2026_03_17_19_20": {
-      "date": "2026-03-17 19:20",
-      "result": "✅ 性能监控检查 - 系统运行稳定",
-      "notes": "Docker: 11个容器运行中. DSP Platform: 8个(backend/worker/beat/flower/nginx/mysql/redis/grafana/prometheus). 权限系统: 2个(backend/frontend). 健康状态: 6个健康,5个未标记健康检查(nginx、grafana、prometheus、权限backend、权限frontend正常运行). 端口: 所有服务端口正常监听. API: 所有接口响应正常. Git状态: 无未提交改动. 结论: 系统运行稳定,无ERROR/WARNING错误."
     }
   }
 }
