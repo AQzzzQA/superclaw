@@ -1,6 +1,6 @@
 {
   "lastChecks": {
-    "code_health": 1758062040,
+    "code_health": 1758065640,
     "dependencies": 1758052040,
     "docs": 1773157200,
     "performance": 1758064040,
@@ -19,7 +19,7 @@
     "manual": 2
   },
   "systemMetrics": {
-    "uptimeHours": 129,
+    "uptimeHours": 130,
     "dockerContainers": 11,
     "externalServices": {
       "management": 200,
@@ -39,12 +39,22 @@
       "permissions_backend": "running",
       "permissions_frontend": "running"
     },
+    "containerHealth": {
+      "healthy": 6,
+      "running": 5,
+      "total": 11
+    },
     "warnings": 1,
     "errors": 0
   },
-  "lastReport": 1758064040,
-  "totalScans": 256,
+  "lastReport": 1758065640,
+  "totalScans": 257,
   "recentScans": {
+    "code_health_2026_03_17_09_14": {
+      "date": "2026-03-17 09:14",
+      "result": "✅ 代码健康检查 - 无新问题",
+      "notes": "TODO/FIXME标记: 0个. 未提交改动: 0个. 工作区: 干净. Docker状态: 11个容器运行,6个健康,5个未标记健康检查(nginx、grafana、prometheus、权限backend、权限frontend正常但未配置). 状态: 正常."
+    },
     "performance_2026_03_17_08_44": {
       "date": "2026-03-17 08:44",
       "result": "✅ 性能监控检查 - 系统运行稳定",
@@ -54,11 +64,6 @@
       "date": "2026-03-17 08:14",
       "result": "✅ 代码健康检查 - 无新问题",
       "notes": "TODO/FIXME标记: 0个. 未提交改动: 1个 (gittest submodule reference已提交). Git提交: 489d350. 工作区: 干净. 状态: 正常."
-    },
-    "security_2026_03_17_07_44": {
-      "date": "2026-03-17 07:44",
-      "result": "✅ 安全审计完成 - 无敏感信息泄露",
-      "notes": "敏感信息扫描: 未发现硬编码密钥/密码. .env.example检查: ad-platform、dsp-platform配置完善,占位符明确. 日志检查: 后端日志无敏感信息泄露. 数据库: 连接数正常,无异常连接. 权限配置: JWT认证、RBAC权限系统已实现. 结论: 安全配置良好,无高风险问题."
     }
   }
 }
