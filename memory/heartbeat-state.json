@@ -1,6 +1,6 @@
 {
   "lastChecks": {
-    "code_health": 1758111640,
+    "code_health": 1758113440,
     "dependencies": 1758104440,
     "docs": 1758108040,
     "performance": 1758100800,
@@ -19,7 +19,7 @@
     "manual": 2
   },
   "systemMetrics": {
-    "uptimeHours": 144,
+    "uptimeHours": 145,
     "dockerContainers": 11,
     "externalServices": {
       "management": 200,
@@ -47,9 +47,14 @@
     "warnings": 1,
     "errors": 0
   },
-  "lastReport": 1758111640,
-  "totalScans": 283,
+  "lastReport": 1758113440,
+  "totalScans": 284,
   "recentScans": {
+    "code_health_2026_03_17_22_50": {
+      "date": "2026-03-17 22:50",
+      "result": "✅ 代码健康检查 - 未提交改动持续存在",
+      "notes": "TODO/FIXME标记: 0个. 未提交改动: 1个文件(permissions-system: 1行修改). Docker状态: 11个容器运行(6健康,5未标记健康检查). 状态: 正常,权限系统有未提交改动(持续)."
+    },
     "code_health_2026_03_17_22_20": {
       "date": "2026-03-17 22:20",
       "result": "✅ 代码健康检查 - 发现未提交改动",
@@ -59,11 +64,6 @@
       "date": "2026-03-17 21:50",
       "result": "✅ 代码健康检查 - 无新问题",
       "notes": "TODO/FIXME标记: 0个. 未提交改动: 0个. 工作区: 干净. Docker状态: 11个容器运行(6健康,5未标记健康检查). 状态: 正常."
-    },
-    "docs_2026_03_17_21_20": {
-      "date": "2026-03-17 21:20",
-      "result": "✅ 文档完整性检查 - 无新问题",
-      "notes": "Git状态: 干净. 文档更新: 所有文档已同步到最新状态. MEMORY.md: 最新记录已更新(心跳#280). README检查: 项目README完整. 状态: 无新问题,待处理问题不变."
     }
   }
 }
